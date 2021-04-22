@@ -1,0 +1,9 @@
+INVITION_CONFIG: BASE_DIR/config-local.yml
+
+PRODUCT_NAME: 'Invitation Card'
+PRODUCT_VERSION: '0.1.0'
+
+SECRET_KEY: 'OVERRIDE'
+
+DEBUG: off
+SECURE_COOKIES: yes

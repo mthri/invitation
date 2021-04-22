@@ -1,0 +1,9 @@
+.vscode
+config-local.yml
+db.sqlite3
+db.sqlite3-journal
+/dashboard/migrations
+/payment/migrations
+/authentication/migrations
+/invitation/__pycache__
+/utils/__pycache__
