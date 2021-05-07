@@ -4,6 +4,11 @@ db.sqlite3
 db.sqlite3-journal
 /dashboard/migrations
 /payment/migrations
+/blog/migrations
 /authentication/migrations
 /invitation/__pycache__
 /utils/__pycache__
+/blog/__pycache__
+/dashboard/__pycache__
+/payment/__pycache__
+/authentication/__pycache__
