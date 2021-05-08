@@ -13,6 +13,9 @@
   font-family: Vazir;
   src: url(Vazir-Variable.ttf);
 }
+.vazir-font{
+  font-family: Vazir;
+}
 :root {
   --blue: #007bff;
   --indigo: #6610f2;

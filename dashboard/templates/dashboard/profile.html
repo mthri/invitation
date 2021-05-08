@@ -1,0 +1,87 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}
+{{ block.super }}
+پروفایل
+{% endblock %}
+
+{% load dashboard_tag %}
+{% load static %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block page_title %}
+<h1><i class="fa fa-user-circle-o"></i> پروفایل</h1>
+<p>تغییر مشخصات شما</p>
+
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="tile">
+            <h3 class="tile-title">تکمیل مشخصات</h3>
+            <div class="tile-body">
+                <form>
+                    <div class="form-group">
+                        <label class="control-label">نام</label>
+                        <input class="form-control" type="text" value="{{ user.first_name|none_replace }}">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">نام خانوادگی</label>
+                        <input class="form-control" type="text" value="{{ user.last_name|none_replace }}">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">تلفن همراه</label>
+                        <input class="form-control vazir-font mobile-check" maxlength="11" type="text"
+                            placeholder="09200000000" value="{{ user.phone|none_replace }}">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">ایمیل</label>
+                        <input class="form-control" type="email" placeholder="ایمیل"
+                            value="{{ user.email|none_replace }}">
+                    </div>
+                    <div class="form-group form-row">
+                        <label class="control-label">جنسیت:</label>
+                        <div class="animated-radio-button col-md-2">
+                            <label>
+                                <input type="radio" name="gender"><span class="label-text">مرد</span>
+                            </label>
+                        </div>
+                        <div class="animated-radio-button col-md-2">
+                            <label>
+                                <input type="radio" name="gender"><span class="label-text">زن</span>
+                            </label>
+                        </div>
+                        <div class="animated-radio-button col-md-2">
+                            <label>
+                                <input type="radio" name="gender"><span class="label-text">سایر</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">رمز عبور فعلی</label>
+                        <input class="form-control text-left" type="password">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">رمز عبور جدید</label>
+                        <input class="form-control text-left" type="password">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">تکرار رمز عبور جدید</label>
+                        <input class="form-control text-left" type="password">
+                    </div>
+                </form>
+            </div>
+            <div class="tile-footer">
+                <button class="btn btn-primary" type="submit"><i
+                        class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js%}
+<script src="{% static 'dashboard/js/utility.js' %}"></script>
+{% endblock %}
