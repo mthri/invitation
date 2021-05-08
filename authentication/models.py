@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.utils.translation import ugettext_lazy as _, gettext
 
 class UserManager(BaseUserManager):
 
@@ -28,11 +29,15 @@ class UserManager(BaseUserManager):
       return user
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(db_index=True, max_length=100, unique=True)
-    first_name = models.CharField(max_length=100, null=True)
-    first_last = models.CharField(max_length=100, null=True)
-    email = models.EmailField(db_index=True, unique=True)
-    phone = models.CharField(max_length=11, unique=True)
+    class Meta:
+        verbose_name = _('کاربر')
+        verbose_name_plural = _('کاربران')
+
+    username = models.CharField(db_index=True, max_length=100, unique=True, verbose_name=_('نام کاربری'))
+    first_name = models.CharField(max_length=100, null=True, verbose_name=_('نام'))
+    last_name = models.CharField(max_length=100, null=True, verbose_name=_('نام خانوادگی'))
+    email = models.EmailField(db_index=True, unique=True, verbose_name=_('ایمیل'))
+    phone = models.CharField(max_length=11, unique=True, verbose_name=_('تلفن همراه'))
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
