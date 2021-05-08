@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+{% load static %}
+{% block extrastyle %}
+<link href="{% static 'dashboard/vazir-font.css' %}" rel="stylesheet">
+<style>
+    html,
+    body,
+    td,
+    th,
+    input,
+    textarea,
+    select,
+    .form-row p,
+    form .button {
+        font-family: "Vazir", sans-serif;
+    }
+</style>
+{% endblock %}
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
