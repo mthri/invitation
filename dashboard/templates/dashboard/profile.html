@@ -21,25 +21,30 @@
     <div class="col-md-6">
         <div class="tile">
             <h3 class="tile-title">تکمیل مشخصات</h3>
-            <div class="tile-body">
-                <form>
+            <form method="POST">
+                <div class="tile-body">
+                    {% csrf_token %}
                     <div class="form-group">
                         <label class="control-label">نام</label>
-                        <input class="form-control" type="text" value="{{ user.first_name|none_replace }}">
+                        <input class="form-control" type="text" name="first_name" value="{{ user.first_name|none_replace }}">
                     </div>
                     <div class="form-group">
                         <label class="control-label">نام خانوادگی</label>
-                        <input class="form-control" type="text" value="{{ user.last_name|none_replace }}">
+                        <input class="form-control" type="text" name="last_name" value="{{ user.last_name|none_replace }}">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">نام کاربری</label>
+                        <input class="form-control" type="text" name="username" value="{{ user.username|none_replace }}">
                     </div>
                     <div class="form-group">
                         <label class="control-label">تلفن همراه</label>
                         <input class="form-control vazir-font mobile-check" maxlength="11" type="text"
-                            placeholder="09200000000" value="{{ user.phone|none_replace }}">
+                            placeholder="09200000000" name="phone" value="{{ user.phone|none_replace }}">
                     </div>
                     <div class="form-group">
                         <label class="control-label">ایمیل</label>
                         <input class="form-control" type="email" placeholder="ایمیل"
-                            value="{{ user.email|none_replace }}">
+                            name="email" value="{{ user.email|none_replace }}">
                     </div>
                     <div class="form-group form-row">
                         <label class="control-label">جنسیت:</label>
@@ -59,24 +64,38 @@
                             </label>
                         </div>
                     </div>
+                </div>
+                <div class="tile-footer">
+                    <button class="btn btn-primary" type="submit"><i
+                            class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="tile">
+            <h3 class="tile-title">تغییر رمز عبور</h3>
+            <form method="POST" action="{% url 'change_password' %}">
+                <div class="tile-body">
+                    {% csrf_token %}
                     <div class="form-group">
                         <label class="control-label">رمز عبور فعلی</label>
-                        <input class="form-control text-left" type="password">
+                        <input class="form-control text-left" name="old_password" type="password">
                     </div>
                     <div class="form-group">
                         <label class="control-label">رمز عبور جدید</label>
-                        <input class="form-control text-left" type="password">
+                        <input class="form-control text-left" name="password" type="password">
                     </div>
                     <div class="form-group">
                         <label class="control-label">تکرار رمز عبور جدید</label>
-                        <input class="form-control text-left" type="password">
+                        <input class="form-control text-left" name="confirm_password" type="password">
                     </div>
-                </form>
-            </div>
-            <div class="tile-footer">
-                <button class="btn btn-primary" type="submit"><i
-                        class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
-            </div>
+                </div>
+                <div class="tile-footer">
+                    <button class="btn btn-primary" type="submit"><i
+                            class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
+                </div>
             </form>
         </div>
     </div>
@@ -84,4 +103,10 @@
 {% endblock %}
 {% block extra_js%}
 <script src="{% static 'dashboard/js/utility.js' %}"></script>
+<script>
+    var formError = {{errors|safe}}
+
+
+    
+</script>
 {% endblock %}
