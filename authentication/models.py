@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils.translation import ugettext_lazy as _, gettext
 
+from utils.validators import validate_mobile
+
 class UserManager(BaseUserManager):
 
     def create_user(self, username, email, password=None):
@@ -37,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=100, null=True, verbose_name=_('نام'))
     last_name = models.CharField(max_length=100, null=True, verbose_name=_('نام خانوادگی'))
     email = models.EmailField(db_index=True, unique=True, verbose_name=_('ایمیل'))
-    phone = models.CharField(max_length=11, unique=True, verbose_name=_('تلفن همراه'))
+    phone = models.CharField(max_length=11, validators=[validate_mobile], unique=True, verbose_name=_('تلفن همراه'))
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
@@ -45,3 +47,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']
 
     objects = UserManager()
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
