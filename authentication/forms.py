@@ -50,4 +50,19 @@ class LoginForm(forms.Form):
                 return False  
 
 
+class ChangePasswordForm(forms.Form):
+    old_password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput)
 
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        return password
+
+    def clean_old_password(self):
+        old_password = self.cleaned_data.get('old_password')
+        return old_password
+
+    def clean_confirm_password(self):
+        confirm_password = self.cleaned_data.get('confirm_password')
+        return confirm_password

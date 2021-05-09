@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from .forms import LoginForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 #TODO create log and redirect to blog
 class Login(View):
@@ -22,6 +23,10 @@ class Login(View):
 
     def get(self, request, *args, **kwargs):
         return render(request, 'dashboard/login.html')
+
+class ChangePassword(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        pass
 
 def Logout(request):
     logout(request)
