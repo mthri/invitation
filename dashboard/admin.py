@@ -10,3 +10,5 @@ admin_site = CustomAdmin()
 @admin.register(get_user_model(), site=admin_site)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'username', 'email')
+    readonly_fields = ('last_login', )
+    exclude = ('password', )
