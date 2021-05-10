@@ -25,6 +25,6 @@ def validate_mobile(value):
     pattern = re.compile(r'09(1[0-9]|3[1-9]|2[0-9])-?[0-9]{3}-?[0-9]{4}')
     if not re.match(pattern, value):
         raise ValidationError(
-            _('%(value)s شماره تلفن صحیح نمی‌باشد'),
+            _('شماره تلفن %(value)s صحیح نمی‌باشد'),
             params={'value': value},
         )

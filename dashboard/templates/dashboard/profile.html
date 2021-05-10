@@ -104,9 +104,9 @@
 {% block extra_js%}
 <script src="{% static 'dashboard/js/utility.js' %}"></script>
 <script>
-    var formError = {{errors|safe}}
+    var formError = {{errors|pprint|safe}}
 
-
+    showError(formError)
     
 </script>
 {% endblock %}

@@ -13,3 +13,14 @@ $(() => {
         }
     })
 })
+
+function showError(errors) {
+    Object.entries(errors).forEach(([inputName, messageArray]) => {
+        Object.entries(messageArray).forEach(([_, message]) => {
+            let input = $(`[name=${inputName}]`)
+            input.removeClass('is-valid')
+            input.addClass('is-invalid')
+            input.parent().append(`<div class="form-control-feedback text-danger">${message.message}</div>`)
+        })
+    }); 
+}
