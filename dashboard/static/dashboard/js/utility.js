@@ -12,6 +12,29 @@ $(() => {
 
         }
     })
+
+    $('.ajax-submit').submit((e)=>{
+        e.preventDefault()
+        let form = $(e.target)
+        $.ajax({
+            url: form.attr("action"),
+            data: form.serialize(),
+            method: form.attr('method')
+        }).done((data)=>{
+            swal({
+                title: "",
+                text: "عملیات با موفقیت انجام شد",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "ادامه",
+                closeOnConfirm: true,
+            })
+            form.trigger("reset")
+        }).fail((errors)=>{
+            clearError(form)
+            showError(errors.responseJSON)
+        })
+    })
 })
 
 function showError(errors) {
@@ -23,4 +46,9 @@ function showError(errors) {
             input.parent().append(`<div class="form-control-feedback text-danger">${message.message}</div>`)
         })
     }); 
+}
+
+function clearError(form){
+    form.find('.form-control-feedback').remove()
+    $(form).find('.is-invalid').removeClass('is-invalid')
 }

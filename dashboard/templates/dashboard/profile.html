@@ -21,7 +21,7 @@
     <div class="col-md-6">
         <div class="tile">
             <h3 class="tile-title">تکمیل مشخصات</h3>
-            <form method="POST">
+            <form method="POST" action="{% url 'profile' %}">
                 <div class="tile-body">
                     {% csrf_token %}
                     <div class="form-group">
@@ -76,7 +76,7 @@
     <div class="col-md-6">
         <div class="tile">
             <h3 class="tile-title">تغییر رمز عبور</h3>
-            <form method="POST" action="{% url 'change_password' %}">
+            <form method="POST" action="{% url 'change_password' %}" class="ajax-submit">
                 <div class="tile-body">
                     {% csrf_token %}
                     <div class="form-group">
@@ -102,11 +102,10 @@
 </div>
 {% endblock %}
 {% block extra_js%}
+<script src="{% static 'dashboard/js/plugins/sweetalert.min.js' %}"></script>
 <script src="{% static 'dashboard/js/utility.js' %}"></script>
 <script>
-    var formError = {{errors|pprint|safe}}
-
+    var formError = {{errors|safe}}
     showError(formError)
-    
 </script>
 {% endblock %}
