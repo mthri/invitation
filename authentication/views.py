@@ -46,3 +46,6 @@ class ChangePassword(LoginRequiredMixin, View):
 def Logout(request):
     logout(request)
     return redirect('/')
+
+def register(request):
+    return render(request, 'dashboard/register.html')

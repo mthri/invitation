@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Main CSS-->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/main.css'%}">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css"
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>دعوت نامه | ثبت نام</title>
+</head>
+
+<body>
+    <section class="material-half-bg">
+        <div class="cover"></div>
+    </section>
+    <section class="login-content">
+        <div class="logo">
+            <h1 style="font-family: Vazir;">ثبت نام</h1>
+        </div>
+        <div class="login-box">
+            <form class="login-form" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="control-label float-right">ایمیل</label>
+                    <input class="form-control text-left" type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label class="control-label float-right">رمز عبور</label>
+                    <input class="form-control text-left" type="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label class="control-label float-right">تکرار رمز عبور </label>
+                    <input class="form-control text-left" name="confirm_password" type="password required">
+                </div>
+                <div class="form-group">
+                    <div class="utility">
+                        {% comment %}
+                        <div class="animated-checkbox">
+                            <label>
+                                <input type="checkbox"><span class="label-text">Stay Signed in</span>
+                            </label>
+                        </div>
+                        {% endcomment %}
+                        <p class="semibold-text mb-2 float-right">
+                            آیا حساب دارید؟ <a href="{% url 'login' %}">وارد شوید</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group btn-container">
+                    <button class="btn btn-primary btn-block"><i class="fa fa-sign-in fa-lg fa-fw"></i>ثبت نام</button>
+                </div>
+            </form>
+            
+        </div>
+    </section>
+    <!-- Essential javascripts for application to work-->
+    <script src="{% static 'dashboard/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/popper.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/main.js' %}"></script>
+    <!-- The javascript plugin to display page loading on top-->
+    <script src="{% static 'dashboard/js/plugins/pace.min.js' %}"></script>
+    {# show error when registration failed #}
+    {% if register_failed %}
+    <script src="{% static 'dashboard/js/plugins/sweetalert.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/utility.js' %}"></script>
+    <script>
+        var formError = {{errors|safe}}
+        showError(formError)
+    </script>
+    {% endif %}
+</body>
+
+</html>
