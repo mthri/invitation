@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager
 from django.utils.translation import ugettext_lazy as _, gettext
 
 from utils.validators import validate_mobile
@@ -30,23 +30,21 @@ class UserManager(BaseUserManager):
 
       return user
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractUser):
     class Meta:
         verbose_name = _('کاربر')
         verbose_name_plural = _('کاربران')
 
-    username = models.CharField(db_index=True, max_length=100, unique=True, verbose_name=_('نام کاربری'))
-    first_name = models.CharField(max_length=100, null=True, verbose_name=_('نام'))
-    last_name = models.CharField(max_length=100, null=True, verbose_name=_('نام خانوادگی'))
+    # username = models.CharField(db_index=True, max_length=100, unique=True, verbose_name=_('نام کاربری'))
+    # first_name = models.CharField(max_length=100, null=True, verbose_name=_('نام'))
+    # last_name = models.CharField(max_length=100, null=True, verbose_name=_('نام خانوادگی'))
     email = models.EmailField(db_index=True, unique=True, verbose_name=_('ایمیل'))
     phone = models.CharField(max_length=11, validators=[validate_mobile], unique=True, verbose_name=_('تلفن همراه'))
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['username', 'last_name']
 
-    objects = UserManager()
+    # objects = UserManager()
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
