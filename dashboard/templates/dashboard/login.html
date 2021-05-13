@@ -51,14 +51,15 @@
                     <button class="btn btn-primary btn-block"><i class="fa fa-sign-in fa-lg fa-fw"></i>ورود</button>
                 </div>
             </form>
-            <form class="forget-form" action="index.html">
+            <form class="forget-form" action="{% url 'reset_password' %}" method="POST">
+                {% csrf_token %}
                 <h3 class="login-head"><i class="fa fa-lg fa-fw fa-lock"></i>درخواست تغییر رمز عبور</h3>
                 <div class="form-group">
                     <label class="control-label float-right">ایمیل</label>
-                    <input class="form-control" type="text" placeholder="ایمیل">
+                    <input class="form-control" type="text" name="username" placeholder="ایمیل">
                 </div>
                 <div class="form-group btn-container">
-                    <button class="btn btn-primary btn-block"><i class="fa fa-unlock fa-lg fa-fw"></i>ریست</button>
+                    <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-unlock fa-lg fa-fw"></i>ریست</button>
                 </div>
                 <div class="form-group mt-3">
                     <p class="semibold-text mb-0"><a href="#" data-toggle="flip"><i class="fa fa-angle-left fa-fw"></i>

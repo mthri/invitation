@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 
-from .forms import LoginForm, ChangePasswordForm
+from .forms import LoginForm, ChangePasswordForm, ResetPasswordForm
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class Login(View):
             return render(request, settings.LOGIN_TEMPLATE, context={'login_failed':True})
 
         logger.info('Login successfully for %s'%form.data.get('username'))
-        
+
         # redirect to specefic url if set `next`
         redirect_to = request.GET.get('next', '/')
         if redirect_to and is_safe_url(url=redirect_to, allowed_hosts=request.get_host()):
@@ -48,6 +48,12 @@ class ChangePassword(LoginRequiredMixin, View):
 
         return redirect(settings.LOGIN_URL)
 
+class ResetPassword(View):
+    def post(self, request, *args, **kwargs):
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            form.reset_password()
+        return redirect(settings.LOGIN_URL)
 
 def Logout(request):
     logout(request)
