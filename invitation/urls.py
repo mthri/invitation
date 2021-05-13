@@ -20,6 +20,6 @@ from dashboard.admin import admin_site
 
 urlpatterns = [
     path('admin/', admin_site.urls),
-    path('dashboard/', include('dashboard.urls')),
+    path('panel/', include('dashboard.urls')),
     path('auth/', include('authentication.urls')),
 ]
