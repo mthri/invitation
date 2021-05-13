@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import render, redirect, HttpResponse
 from django.utils.http import is_safe_url
 from django.http import JsonResponse
@@ -9,14 +11,18 @@ from django.conf import settings
 
 from .forms import LoginForm, ChangePasswordForm
 
-#TODO create log and redirect to blog
+logger = logging.getLogger(__name__)
+
 class Login(View):
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
         if not form.is_valid() or not form.authenticate_user(request):
+            logger.info('Login failed for %s'%form.data.get('username'))
             return render(request, settings.LOGIN_TEMPLATE, context={'login_failed':True})
 
-
+        logger.info('Login successfully for %s'%form.data.get('username'))
+        
+        # redirect to specefic url if set `next`
         redirect_to = request.GET.get('next', '/')
         if redirect_to and is_safe_url(url=redirect_to, allowed_hosts=request.get_host()):
             return redirect(redirect_to)
