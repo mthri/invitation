@@ -9,10 +9,10 @@ def _get_config():
         config = yaml.safe_load(f,)
     config['BASE_DIR'] = BASE_DIR
 
-
     if os.path.exists(config['INVITION_CONFIG'].replace('BASE_DIR', BASE_DIR)):
         with open(config['INVITION_CONFIG'].replace('BASE_DIR', BASE_DIR)) as f:
             config.update(yaml.load(f, yaml.SafeLoader) or {})
 
+    return config
 
 CONFIG = _get_config()

@@ -9,14 +9,20 @@
 - [ ] برسی لزوم استفاده از redis  
 - [ ] انتخاب قالب  
 - [ ] تحلیل درگاه پرداخت  
+- [ ] نام کاربری حداقل 5 کارکتر  
+- [ ] New Task  
+- [ ] امکان مدیریت سشن  
+- [ ] rate limit  
 
 ### In Progress
 
-- [ ] reset password  
-- [ ] سیستم ثبت نام  
+- [ ] مخاطبین  
+- [ ] auth backend search  
 
 ### Done ✓
 
+- [x] سیستم ثبت نام  
+- [x] reset password  
 - [x] تحلیل سیستم لاگر  
 - [x] change password  
 - [x] نمایش ارور با json  
