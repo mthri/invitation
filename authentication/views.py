@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 
-from .forms import LoginForm, ChangePasswordForm, ResetPasswordForm
+from .forms import LoginForm, ChangePasswordForm, ResetPasswordForm, RegisterForm
 
 logger = logging.getLogger(__name__)
 
@@ -55,9 +55,23 @@ class ResetPassword(View):
             form.reset_password()
         return redirect(settings.LOGIN_URL)
 
+class Register(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, settings.REGISTER_TEMPLATE)
+
+    def post(self, request, *args, **kwargs):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+            
+        # if form is invalid
+        return render(request, settings.REGISTER_TEMPLATE, 
+                      context={'errors': form.errors.get_json_data(),
+                               'register_failed': True})
+        
+
+
 def Logout(request):
     logout(request)
     return redirect('/')
-
-def register(request):
-    return render(request, 'dashboard/register.html')

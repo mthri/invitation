@@ -93,7 +93,7 @@ LOGIN_URL = '/auth/login'
 
 # Used for authentication app
 LOGIN_TEMPLATE = 'dashboard/login.html'
-REGISTER_TEMPLATE = 'register/login.html'
+REGISTER_TEMPLATE = 'dashboard/register.html'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
