@@ -5,6 +5,8 @@ from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserM
 from django.utils.html import DOTS
 from django.utils.translation import ugettext_lazy as _, gettext
 
+from django_mysql.models import EnumField
+
 from utils.validators import validate_mobile
 
 logger = logging.getLogger(__name__)
@@ -16,6 +18,7 @@ class User(AbstractUser):
 
     email = models.EmailField(db_index=True, unique=True, verbose_name=_('ایمیل'))
     phone = models.CharField(max_length=11, validators=[validate_mobile], unique=True, verbose_name=_('تلفن همراه'))
+    gender = EnumField(choices=['M', 'F', 'O'],  verbose_name=_('جنسیت'), null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'last_name']
