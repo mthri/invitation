@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Contact
+from .models import Contact, Tag
+
 class CustomAdmin(admin.AdminSite):
     site_header = _('سامانه دعوت نامه')
 
@@ -18,3 +19,8 @@ class UserAdmin(admin.ModelAdmin):
 class ContactAdmin(admin.ModelAdmin):
     readonly_fields = ('is_deleted', )
     #TODO load user lazy
+
+@admin.register(Tag, site=admin_site)
+class TagAdmin(admin.ModelAdmin):
+    pass
+
