@@ -23,3 +23,7 @@ class Profile(PremissionMixin, View):
         return render(request, 'dashboard/profile.html', 
                       context={'user': request.user,
                                'errors': form.errors.get_json_data()})
+
+class Contact(PremissionMixin, View):
+    def get(self, request, *arg, **kwargs):
+        return render(request, 'dashboard/contact_manage.html')

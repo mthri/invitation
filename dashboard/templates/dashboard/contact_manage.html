@@ -1,0 +1,166 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}
+{{ block.super }}
+مدیریت مخاطبین
+{% endblock %}
+
+{% load dashboard_tag %}
+{% load static %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block page_title %}
+<h1><i class="fa fa-address-book-o"></i> مخاطبین</h1>
+<p>ثبت و مدیریت مخاطبین</p>
+
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">بارگزاری مخاطبین جدید</h3>
+            </div>
+            <div class="tile-body">
+                <div class="form-group">
+                    <label class="control-label">انتخاب برچسب</label>
+                    <select class="form-control select2" multiple="">
+                        <optgroup label="Select Cities">
+                            <option>Ahmedabad</option>
+                            <option>Surat</option>
+                            <option>Vadodara</option>
+                            <option>Rajkot</option>
+                            <option>Bhavnagar</option>
+                            <option>Jamnagar</option>
+                            <option>Gandhinagar</option>
+                            <option>Nadiad</option>
+                            <option>Morvi</option>
+                            <option>Surendranagar</option>
+                            <option>Junagadh</option>
+                            <option>Gandhidham</option>
+                            <option>Veraval</option>
+                            <option>Ghatlodiya</option>
+                            <option>Bharuch</option>
+                            <option>Anand</option>
+                            <option>Porbandar</option>
+                            <option>Godhra</option>
+                            <option>Navsari</option>
+                            <option>Dahod</option>
+                            <option>Botad</option>
+                            <option>Kapadwanj</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <form class="text-center dropzone" method="POST" enctype="multipart/form-data" action="/file-upload">
+                    <div class="dz-message">فایل خود را اینجا رها کنید<br><small class="text-info">(پسوند های مجاز: csv,
+                            xls)</small></div>
+                </form>
+            </div>
+            <div class="tile-footer">
+                <button class="btn btn-primary" type="submit"><i
+                        class="fa fa-fw fa-lg fa-check-circle"></i>بارگزاری</button>&nbsp;&nbsp;&nbsp;
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">اضافه کردن مخاطب (دستی)</h3>
+                <p><a class="btn btn-primary icon-btn" href="#"><i class="fa fa-plus"></i>فیلد </a></p>
+            </div>
+            <div class="tile-body">
+                <div class="form-group">
+                    <label class="control-label">انتخاب برچسب</label>
+                    <select class="form-control select2" multiple="">
+                        <optgroup label="Select Cities">
+                            <option>Ahmedabad</option>
+                            <option>Surat</option>
+                            <option>Vadodara</option>
+                            <option>Rajkot</option>
+                            <option>Bhavnagar</option>
+                            <option>Jamnagar</option>
+                            <option>Gandhinagar</option>
+                            <option>Nadiad</option>
+                            <option>Morvi</option>
+                            <option>Surendranagar</option>
+                            <option>Junagadh</option>
+                            <option>Gandhidham</option>
+                            <option>Veraval</option>
+                            <option>Ghatlodiya</option>
+                            <option>Bharuch</option>
+                            <option>Anand</option>
+                            <option>Porbandar</option>
+                            <option>Godhra</option>
+                            <option>Navsari</option>
+                            <option>Dahod</option>
+                            <option>Botad</option>
+                            <option>Kapadwanj</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="control-label">نام</label>
+                        <input class="form-control" type="text">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">نام خانوادگی</label>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">تلفن همراه</label>
+                    <input class="form-control" type="text">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">ایمیل</label>
+                    <input class="form-control" type="text">
+                </div>
+                <!--
+            <div class="form-group">
+                <label class="control-label">تلگرام</label>
+                <input class="form-control" type="text" >
+            </div> -->
+            </div>
+            <div class="tile-footer">
+                <button class="btn btn-primary" type="submit"><i
+                        class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="tile">
+          <div class="tile-body">
+            <div class="table-responsive">
+              <table class="table table-hover table-bordered" id="sampleTable">
+                <thead>
+                </thead>
+                <table>
+                </table>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{% endblock %}
+{% block extra_js%}
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/sweetalert.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/utility.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/dropzone.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/dataTables.bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/ persian-datatable.js' %}"></script>
+<script>
+    $('.select2').select2();
+    $('#sampleTable').DataTable({
+        language: datatablePersianLang,
+    });
+    // var formError = {{errors|safe}}
+    // showError(formError)
+</script>
+{% endblock %}
