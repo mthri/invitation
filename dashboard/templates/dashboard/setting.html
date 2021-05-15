@@ -1,0 +1,80 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}
+{{ block.super }}
+تنظیمات
+{% endblock %}
+
+{% load dashboard_tag %}
+{% load static %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block page_title %}
+<h1><i class="fa fa-cogs"></i> تنظیمات</h1>
+<p>تنظیمات، ایجاد و ویرایش تگ</p>
+
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-md-5">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">ثبت برچسب</h3>
+            </div>
+            <div class="tile-body">
+                <div class="form-group">
+                    <label class="control-label">نام</label>
+                    <input class="form-control" type="text" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label>توضیحات</label>
+                    <textarea class="form-control" rows="3" maxlength="100"></textarea>
+                </div>
+            </div>
+            <div class="tile-footer">
+                <button class="btn btn-primary" type="submit"><i
+                        class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div class="tile">
+            <div class="tile-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered" id="sampleTable">
+                        <thead>
+                            <tr>
+                                <th>نام</th>
+                                <th>توضیحات</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js%}
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/sweetalert.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/utility.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/dropzone.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/dataTables.bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/ persian-datatable.js' %}"></script>
+<script>
+    $('.select2').select2();
+    $('#sampleTable').DataTable({
+        language: datatablePersianLang,
+    });
+    // var formError = {{errors|safe}}
+    // showError(formError)
+</script>
+{% endblock %}
