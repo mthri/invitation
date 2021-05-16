@@ -8,6 +8,9 @@ from django.utils.translation import ugettext_lazy as _
 from django_mysql.models import Model
 from django_mysql.models import JSONField, SetCharField
 
+
+User = get_user_model()
+
 class Contact(Model):
     class Meta:
         verbose_name = _('مخاطب')
@@ -35,7 +38,7 @@ class Tag(Model):
         verbose_name_plural = _('برچسب ها')
 
     created_at = models.DateTimeField(auto_now=True, verbose_name=_('تاریخ ایجاد'))
-    owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, 
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, 
                               verbose_name=_('مالک'), related_name='tags', 
                               null=True, db_index=True)
     name = models.CharField(max_length=20, verbose_name=_('نام'), default=_('ندارد'))
@@ -43,4 +46,8 @@ class Tag(Model):
 
     def __str__(self) -> str:
         return self.name
+
+    @staticmethod
+    def get_by_user(user:User):
+        return Tag.objects.filter(owner=user)
        
