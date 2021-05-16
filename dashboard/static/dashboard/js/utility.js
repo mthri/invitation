@@ -16,6 +16,7 @@ $(() => {
     $('.ajax-submit').submit((e)=>{
         e.preventDefault()
         let form = $(e.target)
+        // form.find(':input').prop("disabled", true);
         $.ajax({
             url: form.attr("action"),
             data: form.serialize(),
@@ -29,8 +30,18 @@ $(() => {
                 confirmButtonText: "ادامه",
                 closeOnConfirm: true,
             })
+            // form.find(':input').prop("disabled", false);
             form.trigger("reset")
         }).fail((errors)=>{
+            swal({
+                title: "",
+                text: "عملیات با خطا مواجه شده است",
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "ادامه",
+                closeOnConfirm: true,
+            })
+            // form.find(':input').prop("disabled", false);
             clearError(form)
             showError(errors.responseJSON)
         })

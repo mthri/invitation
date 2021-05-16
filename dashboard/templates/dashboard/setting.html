@@ -23,27 +23,35 @@
             <div class="tile-title-w-btn">
                 <h3 class="title">ثبت برچسب</h3>
             </div>
-            <div class="tile-body">
-                <div class="form-group">
-                    <label class="control-label">نام</label>
-                    <input class="form-control" type="text" maxlength="20">
+            <form class="ajax-submit" action="{% url 'ajax_tag_add' %}" method="POST">
+                {% csrf_token %}
+                <div class="tile-body">
+                    <div class="form-group">
+                        <label class="control-label">نام</label>
+                        <input class="form-control" type="text" name="name" maxlength="20">
+                    </div>
+                    <div class="form-group">
+                        <label>توضیحات</label>
+                        <textarea class="form-control" rows="3" name="description" maxlength="100"></textarea>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>توضیحات</label>
-                    <textarea class="form-control" rows="3" maxlength="100"></textarea>
+                <div class="tile-footer">
+                    <button class="btn btn-primary" type="submit"><i
+                            class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
                 </div>
-            </div>
-            <div class="tile-footer">
-                <button class="btn btn-primary" type="submit"><i
-                        class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
-            </div>
+            </form>
         </div>
     </div>
     <div class="col-md-7">
         <div class="tile">
+            <div class="tile-title-w-btn float-left">
+                <p><a class="btn btn-primary icon-btn" id="refresh-tag-table" href="#"><i
+                            class="fa fa-refresh"></i>بروزرسانی</a>
+                </p>
+            </div>
             <div class="tile-body">
                 <div class="table-responsive">
-                    <table class="table table-hover table-bordered" id="sampleTable">
+                    <table class="table table-hover table-bordered" id="tags-table" style="width: 100%;">
                         <thead>
                             <tr>
                                 <th>نام</th>
@@ -52,7 +60,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                         </tbody>
                     </table>
                 </div>
@@ -71,9 +79,53 @@
 <script type="text/javascript" src="{% static 'dashboard/js/ persian-datatable.js' %}"></script>
 <script>
     $('.select2').select2();
-    $('#sampleTable').DataTable({
+
+    var tagTable = $('#tags-table').DataTable({
+        {% comment %}
+        scrollY: true,
+        scrollX: true,
+        scrollCollapse: false,
+        {% endcomment %}
+        paging: true,
+        pageLength: 10,
+        searching: true,
+        fixedColumns: true,
+        serverSide: true,
+        ajax: {
+            url: "{% url 'ajax_tag_get_all' %}",
+            data: (d) => {
+                data = new URLSearchParams({
+                    start: d.start,
+                    length: d.length,
+                    search: d.search.value,
+                    csrfmiddlewaretoken: "{{ csrf_token }}"
+                }).toString()
+                return data
+            },
+            type: 'POST',
+        },
+        columns: [
+            {
+                data: 'Name',
+            },
+            {
+                data: 'Description',
+            },
+            {
+                data: 'Id',
+                className: 'text-center',
+                render: (id)=>{
+                    return `<a href="#" data-id="${id}" class="tag-edit btn-info btn-sm">ویرایش</a>   
+                            <a href="#" data-id="${id}" class="tag-edit btn-danger btn-sm">حذف</a>`
+                }
+            }
+        ],
         language: datatablePersianLang,
     });
+    
+    $('#refresh-tag-table').click((e)=>{
+        tagTable.draw()
+    })
     // var formError = {{errors|safe}}
     // showError(formError)
 </script>
