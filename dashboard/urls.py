@@ -13,4 +13,5 @@ urlpatterns = [
 urlpatterns += [
     path('ajax/tag/add', ajax_views.AddTag.as_view(), name='ajax_tag_add'),
     path('ajax/tag/get/all', ajax_views.GetTags.as_view(), name='ajax_tag_get_all'),
+    path('ajax/tag/remove/<int:tag_id>', ajax_views.RemoveTag.as_view(), name='ajax_tag_remove'),
 ]

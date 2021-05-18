@@ -47,7 +47,18 @@ class GetTags(PremissionMixin, View):
         # limit our result
         all_user_tags = all_user_tags[start:(start+length)]
 
-        results = list(all_user_tags.values(Id=F('id'), Name=F('name'), Description=F('description')))
+        results = list(all_user_tags.values(
+            Id=F('id'), Name=F('name'), Description=F('description')))
 
-        return SuccessJsonResponse({'data': results,'iTotalDisplayRecords':count, 'iTotalRecords':count})
+        return SuccessJsonResponse({'data': results, 'iTotalDisplayRecords': count, 'iTotalRecords': count})
+
+
+class RemoveTag(PremissionMixin, View):
+    http_method_names = ['post', 'options']
+
+    def post(self, request, tag_id: int, *args, **kwargs):
+        user_tags = Tag.get_by_user(request.user)
+        user_tags.filter(id=tag_id).delete()
+        return SuccessJsonResponse()
+
 
