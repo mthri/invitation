@@ -135,8 +135,14 @@
         <div class="tile">
           <div class="tile-body">
             <div class="table-responsive">
-              <table class="table table-hover table-bordered" id="sampleTable">
+              <table class="table table-hover table-bordered" id="sampleTable" style="width: 100;">
                 <thead>
+                    <tr>
+                        <th>نام</th>
+                        <th>نام خانوادگی</th>
+                        <th>تاریخ ایجاد</th>
+                        <th>تگ</th>
+                    </tr>
                 </thead>
                 <table>
                 </table>
@@ -158,7 +164,42 @@
 <script>
     $('.select2').select2();
     $('#sampleTable').DataTable({
-        language: datatablePersianLang,
+        paging: true,
+            pageLength: 10,
+            searching: true,
+            fixedColumns: true,
+            serverSide: true,
+            ajax: {
+                url: "{% url 'ajax_contact_get_all' %}",
+                data: (d) => {
+                    data = new URLSearchParams({
+                        start: d.start,
+                        length: d.length,
+                        search: d.search.value,
+                        csrfmiddlewaretoken: "{{ csrf_token }}"
+                    }).toString()
+                    return data
+                },
+                type: 'POST',
+            },
+            columns: [
+                {
+                    data: 'firstName',
+                },
+                {
+                    data: 'lastName',
+                },
+                {
+                    data: 'created',
+                    render: (date)=>{
+                        return new Date(date).toLocaleDateString('fa-IR');
+                    }
+                },
+                {
+                    data: 'tags'
+                }
+            ],
+            language: datatablePersianLang,
     });
     // var formError = {{errors|safe}}
     // showError(formError)

@@ -3,10 +3,13 @@ from django.views.generic import View
 from django.core.paginator import Paginator
 from django.db.models import F
 
+from django_mysql.models import SetF, ListF
+
 from utils.response import SuccessJsonResponse, BadJsonResponse
 from .mixins import PremissionMixin
 from .ajax_forms import AddTagForm
-from .models import Tag
+from .models import Tag, Contact
+from utils.generic_view import DataTableView
 
 
 class AddTag(PremissionMixin, View):
@@ -62,3 +65,15 @@ class RemoveTag(PremissionMixin, View):
         return SuccessJsonResponse()
 
 
+class GetContact(PremissionMixin, DataTableView):
+    result_args = ('id', 'tags',)
+    result_kwargs = {'firstName': F('first_name'), 
+                     'lastName': F('last_name'), 
+                     'created': F('created_at'),
+                     'contactInfo': F('communicative_road')}
+
+    search_on_field = 'last_name'
+
+    def post(self, request, *args, **kwargs):
+        self.query_set = Contact.get_by_user(request.user)
+        return super().post(request, *args, **kwargs)

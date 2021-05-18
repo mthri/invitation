@@ -32,6 +32,10 @@ class Contact(Model):
     def __str__(self) -> str:
         return self.first_name + ' ' + self.last_name
 
+    @staticmethod
+    def get_by_user(user:User):
+        return Contact.objects.filter(owner=user)
+
 class Tag(Model):
     class Meta:
         verbose_name = _('برچسب')
