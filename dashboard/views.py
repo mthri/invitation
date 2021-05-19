@@ -33,3 +33,8 @@ class Setting(PremissionMixin, View):
     
     def get(self, request, *arg, **kwargs):
         return render(request, 'dashboard/setting.html')
+
+class Invite(PremissionMixin, View):
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, 'dashboard/invite.html')

@@ -1,0 +1,194 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}
+{{ block.super }}
+ایجاد دعوت نامه
+{% endblock %}
+
+{% load dashboard_tag %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+    .image-radio {
+        cursor: pointer;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        border: 4px solid transparent;
+        margin-bottom: 0;
+        outline: 0;
+    }
+
+    .image-radio input[type="radio"] {
+        display: none;
+    }
+
+    .image-radio-checked {
+        border-color: #4783B0;
+    }
+
+    .image-radio .glyphicon {
+        position: absolute;
+        color: #4A79A3;
+        background-color: #fff;
+        padding: 10px;
+        top: 0;
+        right: 0;
+    }
+
+    .image-radio-checked .glyphicon {
+        display: block !important;
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}
+<h1><i class="fa fa-envelope "></i> دعوت نامه</h1>
+<p>ایجاد و زمان بندی دعوت نامه</p>
+
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">انتخاب دسته بندی</h3>
+            </div>
+            <div class="tile-body">
+                <select class="form-control select2">
+                    <optgroup label="Select Cities">
+                        <option>Ahmedabad</option>
+                        <option>Surat</option>
+                        <option>Vadodara</option>
+                        <option>Rajkot</option>
+                        <option>Bhavnagar</option>
+                        <option>Jamnagar</option>
+                        <option>Gandhinagar</option>
+                        <option>Nadiad</option>
+                        <option>Morvi</option>
+                        <option>Surendranagar</option>
+                        <option>Junagadh</option>
+                        <option>Gandhidham</option>
+                        <option>Veraval</option>
+                        <option>Ghatlodiya</option>
+                        <option>Bharuch</option>
+                        <option>Anand</option>
+                        <option>Porbandar</option>
+                        <option>Godhra</option>
+                        <option>Navsari</option>
+                        <option>Dahod</option>
+                        <option>Botad</option>
+                        <option>Kapadwanj</option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">انتخاب قالب</h3>
+            </div>
+            <div class="tile-body">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">اطلاعات دعوت نامه</h3>
+            </div>
+            <div class="tile-body">
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="title">عنوان</label>
+                        <input class="form-control" id="title" type="text">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="date">تاریخ</label>
+                        <input class="form-control" id="date" type="date">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="address">آدرس</label>
+                        <input class="form-control" id="address" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">مهمانان</h3>
+            </div>
+            <div class="tile-body">
+                <div class="toggle lg">
+                    <label>
+                        <input type="checkbox" ‌checked>براساس برچسب<span class="button-indecator"></span>
+                    </label>
+                </div>
+                <select class="form-control select2" multiple>
+                    <optgroup label="انتخاب کنید">
+                        <option>Ahmedabad</option>
+                        <option>Surat</option>
+                        <option>Vadodara</option>
+                        <option>Rajkot</option>
+                        <option>Bhavnagar</option>
+                        <option>Jamnagar</option>
+                        <option>Gandhinagar</option>
+                        <option>Nadiad</option>
+                        <option>Morvi</option>
+                        <option>Surendranagar</option>
+                        <option>Junagadh</option>
+                        <option>Gandhidham</option>
+                        <option>Veraval</option>
+                        <option>Ghatlodiya</option>
+                        <option>Bharuch</option>
+                        <option>Anand</option>
+                        <option>Porbandar</option>
+                        <option>Godhra</option>
+                        <option>Navsari</option>
+                        <option>Dahod</option>
+                        <option>Botad</option>
+                        <option>Kapadwanj</option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">ارسال زمان بندی شده</h3>
+            </div>
+            <div class="tile-body">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+    <button class="btn btn-primary col-md-4">نهایی سازی</button>
+    <div class="col-md-4"></div>
+</div>
+{% endblock %}
+{% block extra_js%}
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/sweetalert.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/utility.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/dropzone.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/dataTables.bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/persian-datatable.js' %}"></script>
+<script>
+    $(() => {
+        $('.select2').select2({
+            dir: "rtl",
+            language: {
+                noResults:()=> {
+                    return "موردی یافت نشد!";
+                }
+            },
+        });
+    })
+</script>
+{% endblock %}
