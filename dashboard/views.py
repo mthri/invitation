@@ -49,4 +49,9 @@ class Purchase(PremissionMixin, View):
 
     def get(self, request, *args, **kwargs):
         return render(request, 'dashboard/purchase.html')
+        transactions
 
+class Transactions(PremissionMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'dashboard/transactions.html')

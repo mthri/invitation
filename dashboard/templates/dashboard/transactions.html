@@ -1,0 +1,88 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}
+{{ block.super }}
+تراکنش های
+{% endblock %}
+
+{% load dashboard_tag %}
+{% load static %}
+
+{% block page_title %}
+<h1><i class="fa fa-credit-card-alt"></i> تراکنش های انجام شده</h1>
+<p>مشاهد و مدیریت</p>
+
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">فیلترها</h3>
+            </div>
+            <div class="tile-body">
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label class="control-label">تاریخ ایجاد</label>
+                        <input class="form-control" type="text" >
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">تاریخ پرداخت</label>
+                        <input class="form-control" type="text" >
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">وضعیت</label>
+                        <input class="form-control" type="text" >
+                    </div>
+                </div>
+            </div>
+            <div class="tile-footer">
+                <button class="btn btn-primary" type="submit"><i
+                        class="fa fa-fw fa-lg fa-search"></i>جستجو</button>&nbsp;&nbsp;&nbsp;
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-body">
+                <table class="table table-hover table-bordered" id="invite-table" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>مبلغ</th>
+                            <th>تاریخ ایجاد</th>
+                            <th>تاریخ پرداخت</th>
+                            <th>توضیحات</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js%}
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/sweetalert.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/utility.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/dropzone.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/dataTables.bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/persian-datatable.js' %}"></script>
+<script>
+    $(() => {
+        var tagTable = $('#invite-table').DataTable({
+            paging: true,
+            pageLength: 50,
+            searching: false,
+            fixedColumns: true,
+            language: datatablePersianLang,
+        })
+    })
+</script>
+{% endblock %}

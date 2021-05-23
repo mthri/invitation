@@ -10,6 +10,7 @@ urlpatterns = [
     path('invite/', views.Invite.as_view(), name='invite'),
     path('invite/history/', views.InviteHistory.as_view(), name='invite_history'),
     path('purchase/', views.Purchase.as_view(), name='purchase'),
+    path('transactions/', views.Transactions.as_view(), name='transactions'),
 ]
 
 # AJAX url
