@@ -1,0 +1,57 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}
+{{ block.super }}
+تنظیمات
+{% endblock %}
+
+{% load dashboard_tag %}
+{% load static %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block page_title %}
+<h1><i class="fa fa-credit-card-alt"></i> خرید</h1>
+<p>خرید، افزایش اعتبار و...</p>
+
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-md-5">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">افزایش اعتبار</h3>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="tile-body">
+                    <div class="form-group">
+                        <label class="control-label">مبلغ</label>
+                        <input class="form-control" type="text" name="amount" maxlength="20" placeholder="مبلغ مورد نظر خود را به ریال وارد کنید">
+                    </div>
+                    <div class="form-group">
+                        <label>توضیحات</label>
+                        <textarea class="form-control" rows="3" name="description" maxlength="100"></textarea>
+                    </div>
+                </div>
+                <div class="tile-footer">
+                    <button class="btn btn-primary" type="submit"><i
+                            class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js%}
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/sweetalert.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/utility.js' %}"></script>
+<script>
+    var CSRF_TOKEN = 'csrfmiddlewaretoken={{csrf_token}}'
+</script>
+<script>
+    // var formError = {{errors|safe}}
+    // showError(formError)
+</script>
+{% endblock %}

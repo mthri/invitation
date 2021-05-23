@@ -44,3 +44,9 @@ class InviteHistory(PremissionMixin, View):
 
     def get(self, request, *args, **kwargs):
         return render(request, 'dashboard/invite_list.html')
+
+class Purchase(PremissionMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'dashboard/purchase.html')
+

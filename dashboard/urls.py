@@ -8,7 +8,8 @@ urlpatterns = [
     path('contact/', views.Contact.as_view(), name='contact'),
     path('setting/', views.Setting.as_view(), name='setting'),
     path('invite/', views.Invite.as_view(), name='invite'),
-    path('invite/history/', views.InviteHistory.as_view(), name='invite_history')
+    path('invite/history/', views.InviteHistory.as_view(), name='invite_history'),
+    path('purchase/', views.Purchase.as_view(), name='purchase'),
 ]
 
 # AJAX url
