@@ -15,13 +15,13 @@ class SetToListJSONEncoder(DjangoJSONEncoder):
 class DataTableView(View):
     http_method_names = ['post', 'options']
     max_length = 100
-    query_set = None
+    queryset = None
     result_args = None
     result_kwargs = None
     search_on_field = None
 
     def post(self, request, *args, **kwargs):
-        count = self.query_set.count()
+        count = self.queryset.count()
 
         # get data from client
         start = int(request.POST.get('start', 0))
@@ -30,17 +30,21 @@ class DataTableView(View):
 
         if search and search.strip() != '':
             search_field = { self.search_on_field+'__icontains': search }
-            self.query_set = self.query_set.filter(**search_field)
+            self.queryset = self.queryset.filter(**search_field)
 
         # we can't set length  greater than max_length
         if length > self.max_length:
             length = self.max_length
 
         # limit our result
-        self.query_set = self.query_set[start:(start+length)]
+        self.queryset = self.queryset[start:(start+length)]
 
-        results = list(self.query_set.values(*self.result_args, **self.result_kwargs))
+        results = list(self.queryset.values(*self.result_args, **self.result_kwargs))
 
         return SuccessJsonResponse({'data': results, 'iTotalDisplayRecords': count, 'iTotalRecords': count}, 
                                     encoder=SetToListJSONEncoder)
+
+
+class Select2View(View):
+    pass
 

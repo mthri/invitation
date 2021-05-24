@@ -75,5 +75,5 @@ class GetContact(PremissionMixin, DataTableView):
     search_on_field = 'last_name'
 
     def post(self, request, *args, **kwargs):
-        self.query_set = Contact.get_by_user(request.user)
+        self.queryset = Contact.get_by_user(request.user)
         return super().post(request, *args, **kwargs)
