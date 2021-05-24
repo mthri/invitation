@@ -18,7 +18,7 @@ class DataTableView(View):
     queryset = None
     result_args = None
     result_kwargs = None
-    search_on_field = None
+    search_on = None
 
     def post(self, request, *args, **kwargs):
         count = self.queryset.count()
@@ -29,7 +29,7 @@ class DataTableView(View):
         search = request.POST.get('search', None)
 
         if search and search.strip() != '':
-            search_field = { self.search_on_field+'__icontains': search }
+            search_field = { self.search_on+'__icontains': search }
             self.queryset = self.queryset.filter(**search_field)
 
         # we can't set length  greater than max_length
@@ -43,8 +43,3 @@ class DataTableView(View):
 
         return SuccessJsonResponse({'data': results, 'iTotalDisplayRecords': count, 'iTotalRecords': count}, 
                                     encoder=SetToListJSONEncoder)
-
-
-class Select2View(View):
-    pass
-

@@ -72,7 +72,7 @@ class GetContact(PremissionMixin, DataTableView):
                      'created': F('created_at'),
                      'contactInfo': F('communicative_road')}
 
-    search_on_field = 'last_name'
+    search_on = 'last_name'
 
     def post(self, request, *args, **kwargs):
         self.queryset = Contact.get_by_user(request.user)
