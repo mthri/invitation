@@ -9,7 +9,7 @@ from utils.response import SuccessJsonResponse, BadJsonResponse
 from .mixins import PremissionMixin
 from .ajax_forms import AddTagForm
 from .models import Tag, Contact
-from utils.generic_view import DataTableView
+from utils.generic_view import DataTableView, Select2View
 
 
 class AddTag(PremissionMixin, View):
@@ -26,6 +26,7 @@ class AddTag(PremissionMixin, View):
 
 
 # This view used for DataTable
+# TODO use DataTable View
 class GetTags(PremissionMixin, View):
     http_method_names = ['post', 'options']
     max_length = 100
@@ -76,4 +77,14 @@ class GetContact(PremissionMixin, DataTableView):
 
     def post(self, request, *args, **kwargs):
         self.queryset = Contact.get_by_user(request.user)
+        return super().post(request, *args, **kwargs)
+
+
+class GetTagSelect2(PremissionMixin, Select2View):
+    http_method_names = ['post']
+    search_on = 'name'
+    result_args = ('id',)
+    result_kwargs = {'text':F('name')}
+    def post(self, request, *args, **kwargs):
+        self.queryset = Tag.get_by_user(request.user)
         return super().post(request, *args, **kwargs)

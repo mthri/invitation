@@ -6,7 +6,7 @@
 
 {% load dashboard_tag %}
 {% load static %}
- 
+
 {% block page_title %}
 <h1><i class="fa fa-envelope "></i> دعوت نامه</h1>
 <p>ایجاد و زمان بندی دعوت نامه</p>
@@ -93,30 +93,8 @@
                         <input type="checkbox" ‌checked>براساس برچسب<span class="button-indecator"></span>
                     </label>
                 </div>
-                <select class="form-control select2" multiple>
+                <select class="form-control select-tag" id="select-tag" name="test" multiple>
                     <optgroup label="انتخاب کنید">
-                        <option>Ahmedabad</option>
-                        <option>Surat</option>
-                        <option>Vadodara</option>
-                        <option>Rajkot</option>
-                        <option>Bhavnagar</option>
-                        <option>Jamnagar</option>
-                        <option>Gandhinagar</option>
-                        <option>Nadiad</option>
-                        <option>Morvi</option>
-                        <option>Surendranagar</option>
-                        <option>Junagadh</option>
-                        <option>Gandhidham</option>
-                        <option>Veraval</option>
-                        <option>Ghatlodiya</option>
-                        <option>Bharuch</option>
-                        <option>Anand</option>
-                        <option>Porbandar</option>
-                        <option>Godhra</option>
-                        <option>Navsari</option>
-                        <option>Dahod</option>
-                        <option>Botad</option>
-                        <option>Kapadwanj</option>
                     </optgroup>
                 </select>
             </div>
@@ -152,14 +130,33 @@
 <script type="text/javascript" src="{% static 'dashboard/js/persian-datatable.js' %}"></script>
 <script>
     $(() => {
-        $('.select2').select2({
+        $('#select-tag').select2({
+            ajax: {
+                url: "{% url 'ajax_tag_get_all_select2' %}",
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        csrfmiddlewaretoken: "{{csrf_token}}",
+                        query: params.term
+                    };
+                },
+                processResults: function (response) {
+                    return {
+                        results: response.data
+                    };
+                },
+                cache: true,
+            },
             dir: "rtl",
             language: {
-                noResults:()=> {
+                noResults: () => {
                     return "موردی یافت نشد!";
                 }
             },
         });
+
     })
 </script>
 {% endblock %}
