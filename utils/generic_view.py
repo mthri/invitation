@@ -1,11 +1,13 @@
 from django.views.generic import View
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import F
 
 from utils.response import SuccessJsonResponse, BadJsonResponse
 
+
 class SetToListJSONEncoder(DjangoJSONEncoder):
-     def default(self, o):
+    def default(self, o):
         if isinstance(o, set):
             return list(o)
         else:
@@ -29,7 +31,8 @@ class DataTableView(View):
         search = request.POST.get('search', None)
 
         if search and search.strip() != '':
-            search_field = { self.search_on+'__icontains': search }
+            #TODO add multi query support
+            search_field = {self.search_on+'__icontains': search}
             self.queryset = self.queryset.filter(**search_field)
 
         # we can't set length  greater than max_length
@@ -39,7 +42,35 @@ class DataTableView(View):
         # limit our result
         self.queryset = self.queryset[start:(start+length)]
 
-        results = list(self.queryset.values(*self.result_args, **self.result_kwargs))
+        results = list(self.queryset.values(
+            *self.result_args, **self.result_kwargs))
 
-        return SuccessJsonResponse({'data': results, 'iTotalDisplayRecords': count, 'iTotalRecords': count}, 
-                                    encoder=SetToListJSONEncoder)
+        return SuccessJsonResponse({'data': results, 'iTotalDisplayRecords': count, 'iTotalRecords': count},
+                                   encoder=SetToListJSONEncoder)
+
+
+class Select2View(View):
+    http_method_names = ['post', 'get']
+    queryset = None
+    search_on = None
+    max_length = 10
+    search_key = 'query'
+    result_args = None
+    result_kwargs = None
+
+    def get(self, request, *args, **kwargs):
+        search = request.GET.get(self.search_key, '')
+        search_field = {self.search_on+'__icontains': search}
+        # limit output result
+        self.queryset = self.queryset.filter(**search_field)[:self.max_length]
+        # only show required field
+        result = list(self.queryset.values(*self.result_args, **self.result_kwargs))
+        return SuccessJsonResponse({'data': result})
+
+    def post(self, request, *args, **kwargs):
+        #TODO find better solution
+        post_data = request.POST.dict()
+        get_date = request.GET.dict()
+        get_date.update(post_data)
+        request.GET = get_date
+        return self.get(request, *args, **kwargs)
