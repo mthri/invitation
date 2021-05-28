@@ -1,3 +1,4 @@
+from typing import List
 import uuid
 
 from django.contrib.auth import get_user_model
@@ -8,6 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 from django_mysql.models import Model
 from django_mysql.models import JSONField, SetCharField
 
+from utils.validators import validate_mobile
+
 
 User = get_user_model()
 
@@ -15,6 +18,8 @@ class Contact(Model):
     class Meta:
         verbose_name = _('مخاطب')
         verbose_name_plural = _('مخاطبین')
+        index_together = ["owner", "phone"]
+        unique_together = ["owner", "phone"]
 
 
     id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
@@ -24,6 +29,7 @@ class Contact(Model):
                               verbose_name=_('مالک'), related_name='contacts', 
                               null=True, db_index=True)
     created_at = models.DateTimeField(auto_now=True, editable=False, verbose_name=_('تاریخ ایجاد'))
+    phone = models.CharField(max_length=11, validators=[validate_mobile], verbose_name=_('تلفن همراه'))
     communicative_road = models.JSONField(verbose_name=('راه های ارتباطی'))
     tags = SetCharField(base_field=models.IntegerField(), size=10, max_length=(10*3), 
                         verbose_name=_('تگ'), null=True, blank=True)
@@ -36,10 +42,20 @@ class Contact(Model):
     def get_by_user(user:User):
         return Contact.objects.filter(owner=user)
 
+    @staticmethod
+    def sync(contacts: List['Contact']) -> None:
+        '''
+        check phone number from available social media is registed
+        or not
+        '''
+        # TODO used `bulk_update` https://docs.djangoproject.com/en/3.2/ref/models/querysets/#bulk-update
+        ...
+
 class Tag(Model):
     class Meta:
         verbose_name = _('برچسب')
         verbose_name_plural = _('برچسب ها')
+        unique_together = ["owner", "name"]
 
     created_at = models.DateTimeField(auto_now=True, verbose_name=_('تاریخ ایجاد'))
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, 
