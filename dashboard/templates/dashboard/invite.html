@@ -7,6 +7,16 @@
 {% load dashboard_tag %}
 {% load static %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'dashboard/css/persian-datepicker.min.css' %}">
+<style>
+    *,
+    body {
+        font-family: Vazir;
+    }
+</style>
+{% endblock %}
+
 {% block page_title %}
 <h1><i class="fa fa-envelope "></i> دعوت نامه</h1>
 <p>ایجاد و زمان بندی دعوت نامه</p>
@@ -15,7 +25,7 @@
 
 {% block main %}
 <div class="row">
-    <div class="col-md-6">
+    <!-- <div class="col-md-6">
         <div class="tile">
             <div class="tile-title-w-btn">
                 <h3 class="title">انتخاب دسته بندی</h3>
@@ -49,7 +59,7 @@
                 </select>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="col-md-12">
         <div class="tile">
             <div class="tile-title-w-btn">
@@ -72,7 +82,9 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="date">تاریخ</label>
-                        <input class="form-control" id="date" type="date">
+                        <input class="form-control invite-date persian-date">
+                        <input type="hidden" name="invite_date" id="invite-date-alt">
+
                     </div>
                     <div class="form-group col-md-6">
                         <label for="address">آدرس</label>
@@ -109,8 +121,10 @@
                 <div class="toggle lg">
                     <div class="align-middle"> ارسال بصورت زمان بندی شده</div>
                     <label>
-                        <input type="checkbox" ‌checked><span class="button-indecator"></span>
+                        <input type="checkbox" class="scheduler-send persian-date" ‌checked><span class="button-indecator"></span>
+                        <input type="hidden" name="scheduler_send" id="scheduler-send-date-alt">
                     </label>
+                    <input class="form-control scheduler-send-date col-md-4">
                 </div>
             </div>
         </div>
@@ -128,6 +142,8 @@
 <script type="text/javascript" src="{% static 'dashboard/js/plugins/jquery.dataTables.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'dashboard/js/plugins/dataTables.bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'dashboard/js/persian-datatable.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/persian-date.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/persian-datepicker.min.js' %}"></script>
 <script>
     $(() => {
         $('#select-tag').select2({
@@ -157,6 +173,29 @@
             },
         });
 
+        $('.invite-date').persianDatepicker({
+            observer: true,
+            format: 'YYYY/MM/DD',
+            altField: '#invite-date-alt'
+        });
+
+        $('.scheduler-send-date').persianDatepicker({
+            observer: true,
+            format: 'YYYY/MM/DD - HH:mm',
+            altField: '#scheduler-send-date-alt',
+            timePicker: {
+                enabled: true,
+                meridiem: {
+                    enabled: true
+                }
+            }
+
+        });
+
+        $('.scheduler-send').change(event => {
+            let isChecked = $(event.target).is(":checked")
+            $('.scheduler-send-date').css('display', (isChecked) ? 'block' : 'none')
+        })
     })
 </script>
 {% endblock %}

@@ -13,6 +13,16 @@
 
 {% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'dashboard/css/persian-datepicker.min.css' %}">
+<style>
+    *,
+    body {
+        font-family: Vazir;
+    }
+</style>
+{% endblock %}
+
 {% block main %}
 <div class="row">
     <div class="col-md-12">
@@ -22,15 +32,16 @@
             </div>
             <div class="tile-body">
                 <div class="form-row">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label class="control-label">عنوان</label>
                         <input class="form-control" type="text" >
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label class="control-label">تاریخ</label>
-                        <input class="form-control" type="text" >
+                        <input class="form-control date" type="text">
+                        <input type="hidden" name="date" id="date-alt">
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label class="control-label">وضعیت</label>
                         <input class="form-control" type="text" >
                     </div>
@@ -73,6 +84,8 @@
 <script type="text/javascript" src="{% static 'dashboard/js/plugins/jquery.dataTables.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'dashboard/js/plugins/dataTables.bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'dashboard/js/persian-datatable.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/persian-date.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/plugins/persian-datepicker.min.js' %}"></script>
 <script>
     $(() => {
         var tagTable = $('#invite-table').DataTable({
@@ -82,6 +95,12 @@
             fixedColumns: true,
             language: datatablePersianLang,
         })
+
+        $('.date').persianDatepicker({
+            observer: true,
+            format: 'YYYY/MM/DD',
+            altField: '#date-alt'
+        });
     })
 </script>
 {% endblock %}
