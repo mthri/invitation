@@ -1,8 +1,12 @@
 import re
+from django.core import exceptions
 
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+
+from jsonschema.exceptions import SchemaError
+from jsonschema import Draft7Validator
 
 
 def is_phone_number(phone: str) -> bool:
@@ -11,7 +15,6 @@ def is_phone_number(phone: str) -> bool:
         return True
     else:
         return False
-
 
 def is_email_address(email: str):
     try:
@@ -28,3 +31,9 @@ def validate_mobile(value):
             _('شماره تلفن %(value)s صحیح نمی‌باشد'),
             params={'value': value},
         )
+
+def validate_draft7(value):
+    try:
+        Draft7Validator.check_schema(value)
+    except SchemaError:
+        raise ValidationError(_('مقدار صحیح نمی‌باشد'))
