@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from django_mysql.models import Model
 from django_mysql.models import SetCharField
-from jsonschema import validate
+from jsonschema import validate, draft7_format_checker
 from jsonschema.exceptions import ValidationError as JsonValidationError
 
 from utils.validators import validate_mobile, validate_draft7
@@ -95,3 +95,34 @@ class Template(BasicField, Model):
 
     def generate_thumbnail(self):
         raise NotImplemented
+
+
+class Invitation(BasicField, Model):
+    class Meta:
+        verbose_name = _('دعوت‌نامه')
+        verbose_name_plural = _('عوت‌نامه ها')
+
+    owner = models.ForeignKey(User, verbose_name=_('ایجاد کننده'), on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=150, verbose_name=_('عنوان'))
+    send_at = models.DateTimeField(null=True, blank=True, verbose_name=_('ارسال در تاریخ'))
+    informations = models.JSONField(validators=[validate_draft7], verbose_name=_('اطلاعات اضافی'))
+    template = models.ForeignKey(Template, verbose_name=_('قالب'), on_delete=models.SET_NULL, null=True)
+
+    def __init__(self) -> None:
+        return self.owner + ' | ' + self.title
+
+    @property
+    def is_scheduler(self) -> bool:
+        return bool(self.send_at)
+
+    @property
+    def is_information_valid(self) -> bool:
+        try:
+            validate(
+                instance=self.informations,
+                schema=self.template.schema,
+                format_checker=draft7_format_checker,
+            )
+            return True
+        except JsonValidationError:
+            return False
