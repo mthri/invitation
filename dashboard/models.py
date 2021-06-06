@@ -1,9 +1,11 @@
 from typing import List
+from typing_extensions import Required
 import uuid
 
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import indexes
+from django.http import request
 from django.utils.translation import ugettext_lazy as _
 
 from django_mysql.models import Model
@@ -51,6 +53,7 @@ class Contact(Model):
         # TODO used `bulk_update` https://docs.djangoproject.com/en/3.2/ref/models/querysets/#bulk-update
         ...
 
+
 class Tag(Model):
     class Meta:
         verbose_name = _('برچسب')
@@ -71,3 +74,12 @@ class Tag(Model):
     def get_by_user(user:User):
         return Tag.objects.filter(owner=user)
        
+
+class Template(Model):
+    name = models.CharField(max_length=100, verbose_name=_('نام قالب'))
+    description = models.CharField(max_length=250, verbose_name=_('توضیحات'))
+    thumbnail = models.ImageField(verbose_name=_('پیش‌نمایش'))
+    schema = models.JSONField(verbose_name=_('ساختار'))
+    
+    def __str__(self) -> str:
+        return self.name + ' | ' + self.description
