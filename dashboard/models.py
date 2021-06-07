@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from django_mysql.models import Model
 from django_mysql.models import SetCharField
-from jsonschema import validate, draft7_format_checker
+from jsonschema import Draft7Validator
 from jsonschema.exceptions import ValidationError as JsonValidationError
 
 from utils.validators import validate_mobile, validate_draft7
@@ -111,6 +111,11 @@ class Invitation(BasicField, Model):
     def __init__(self) -> None:
         return self.owner + ' | ' + self.title
 
+    def save(self, *args, **kwargs):
+        # validate information with template schema
+        Draft7Validator(self.template.schema).validate(self.informations)
+        super().save(*args, **kwargs)
+
     @property
     def is_scheduler(self) -> bool:
         return bool(self.send_at)
@@ -118,11 +123,7 @@ class Invitation(BasicField, Model):
     @property
     def is_information_valid(self) -> bool:
         try:
-            validate(
-                instance=self.informations,
-                schema=self.template.schema,
-                format_checker=draft7_format_checker,
-            )
+            Draft7Validator(self.template.schema).validate(self.informations)
             return True
         except JsonValidationError:
             return False
