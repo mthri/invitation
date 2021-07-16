@@ -89,7 +89,7 @@ class Template(BasicField, Model):
     thumbnail = models.ImageField(null=True, blank=True,
                                   upload_to=THUMBNAIL_DIRECTORY_PATH, verbose_name=_('پیش‌نمایش'))
     schema = models.JSONField(validators=[validate_draft7], verbose_name=_('ساختار'))
-    path = models.FileField(verbose_name=_('فایل قالب'), upload_to=TEMPLATE_DIRECTORY_PATH)
+    path = models.FileField(verbose_name=_('فایل قالب'), upload_to=TEMPLATE_DIRECTORY_PATH, default='')
     
     def __str__(self) -> str:
         return self.name + ' | ' + self.description
