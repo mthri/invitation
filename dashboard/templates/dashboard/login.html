@@ -11,9 +11,12 @@
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css"
         href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- reCAPTCHA API -->
+    <script src='https://www.google.com/recaptcha/api.js?render={{reCaptcha_key}}'></script>
     <title> دعوت نامه | ورود</title>
 </head>
-
+{% load static %}
+{% load dashboard_tag %}
 <body>
     <section class="material-half-bg">
         <div class="cover"></div>
@@ -34,6 +37,7 @@
                     <label class="control-label float-right">رمز عبور</label>
                     <input class="form-control" type="password" name="password">
                 </div>
+                {% reCaptcha_input %}
                 <div class="form-group">
                     <div class="utility">
                         {% comment %}
@@ -82,6 +86,7 @@
             return false;
         });
     </script>
+    {% reCaptcha_js 'login' %}
     {# show error when registration failed #}
     {% if login_failed %}
     <script src="{% static 'dashboard/js/plugins/sweetalert.min.js' %}"></script>

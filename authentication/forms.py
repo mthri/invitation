@@ -10,11 +10,12 @@ from django.core import validators
 
 from utils.validators import is_email_address, is_phone_number
 from utils.email import send_email
+from utils.recaptcha import reCaptchaForm
 
 logger = logging.getLogger(__name__)
 
 
-class LoginForm(forms.Form):
+class LoginForm(reCaptchaForm):
     username = forms.CharField(max_length=255)
     password = forms.CharField(max_length=255)
 
