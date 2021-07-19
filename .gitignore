@@ -13,3 +13,7 @@ db.sqlite3-journal
 /dashboard/templatetags/__pycache__
 /payment/__pycache__
 /authentication/__pycache__
+passenger_wsgi.py
+__pycache__
+logs/
+
