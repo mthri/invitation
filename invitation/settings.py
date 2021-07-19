@@ -143,6 +143,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = CONFIG['STATIC_ROOT']
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+    BASE_DIR / 'dashboard/static',
+    BASE_DIR / 'blog/static',
+    BASE_DIR / 'payment/static',
+]
+
+MEDIA_URL = 'upload'
+MEDIA_ROOT = CONFIG['MEDIA_ROOT']
+
+FILE_UPLOAD_TEMP_DIR = CONFIG['FILE_UPLOAD_TEMP_DIR']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
