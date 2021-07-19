@@ -16,4 +16,4 @@ db.sqlite3-journal
 passenger_wsgi.py
 __pycache__
 logs/
-
+tmp/
