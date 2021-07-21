@@ -3,8 +3,6 @@ import uuid
 
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import indexes
-from django.http import request
 from django.utils.translation import ugettext_lazy as _
 
 from django_mysql.models import Model
@@ -12,7 +10,7 @@ from django_mysql.models import SetCharField
 from jsonschema import Draft7Validator
 from jsonschema.exceptions import ValidationError as JsonValidationError
 
-from utils.validators import validate_mobile, validate_draft7
+from utils.validators import validate_mobile, validate_draft7, validate_template
 from utils.config import THUMBNAIL_DIRECTORY_PATH, TEMPLATE_DIRECTORY_PATH
 
 
@@ -88,7 +86,7 @@ class Template(BasicField, Model):
     description = models.CharField(max_length=250, verbose_name=_('توضیحات'))
     thumbnail = models.ImageField(null=True, blank=True,
                                   upload_to=THUMBNAIL_DIRECTORY_PATH, verbose_name=_('پیش‌نمایش'))
-    schema = models.JSONField(validators=[validate_draft7], verbose_name=_('ساختار'))
+    schema = models.JSONField(validators=[validate_template], verbose_name=_('ساختار'))
     path = models.FileField(verbose_name=_('فایل قالب'), upload_to=TEMPLATE_DIRECTORY_PATH, default='')
     
     def __str__(self) -> str:
@@ -96,7 +94,6 @@ class Template(BasicField, Model):
 
     def generate_thumbnail(self):
         raise NotImplemented
-
 
 class Invitation(BasicField, Model):
     class Meta:

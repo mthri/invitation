@@ -5,8 +5,9 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from jsonschema.exceptions import SchemaError
+from jsonschema.exceptions import SchemaError, ValidationError as JSONValidationError
 from jsonschema import Draft7Validator
+from dashboard.json_schema import template_field
 
 
 def is_phone_number(phone: str) -> bool:
@@ -37,3 +38,11 @@ def validate_draft7(value):
         Draft7Validator.check_schema(value)
     except SchemaError:
         raise ValidationError(_('مقدار صحیح نمی‌باشد'))
+
+def validate_template(value):
+    # first validate draft7 format then schema validation
+    validate_draft7(value)
+    try:
+        Draft7Validator(template_field).validate(value)
+    except JSONValidationError:
+        raise ValidationError(_('قالب فیلد ها صحیح نمی‌باشد'))
