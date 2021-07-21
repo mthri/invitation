@@ -143,7 +143,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = CONFIG['STATIC_ROOT']
+# STATIC_ROOT = CONFIG['STATIC_ROOT']
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -152,7 +152,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'payment/static',
 ]
 
-MEDIA_URL = 'upload'
+MEDIA_URL = '/upload/'
 MEDIA_ROOT = CONFIG['MEDIA_ROOT']
 
 FILE_UPLOAD_TEMP_DIR = CONFIG['FILE_UPLOAD_TEMP_DIR']
