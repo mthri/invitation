@@ -16,9 +16,15 @@ class User(AbstractUser):
         verbose_name = _('کاربر')
         verbose_name_plural = _('کاربران')
 
+    class GenderChoices(models.TextChoices):
+        MAN = 'M', _('مذکر')
+        FEMALE = 'F', _('مونث')
+        OTHER = 'O', _('غیره')
+
     email = models.EmailField(db_index=True, unique=True, verbose_name=_('ایمیل'))
     phone = models.CharField(max_length=11, validators=[validate_mobile], unique=True, verbose_name=_('تلفن همراه'))
-    gender = EnumField(choices=['M', 'F', 'O'],  verbose_name=_('جنسیت'), null=True, blank=True)
+    gender = EnumField(choices=GenderChoices.choices,  verbose_name=_('جنسیت'), null=True, blank=True, 
+                       default=GenderChoices.OTHER)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'last_name']
