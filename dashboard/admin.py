@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Contact, Tag
+from .models import Contact, Tag, Invitation, Template
 
 class CustomAdmin(admin.AdminSite):
     site_header = _('سامانه دعوت نامه')
@@ -24,3 +24,10 @@ class ContactAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(Template, site=admin_site)
+class TemplateAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Invitation, site=admin_site)
+class InvitationAdmin(admin.ModelAdmin):
+    pass
