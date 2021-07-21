@@ -109,7 +109,7 @@ class Invitation(BasicField, Model):
     informations = models.JSONField(validators=[validate_draft7], verbose_name=_('اطلاعات اضافی'))
     template = models.ForeignKey(Template, verbose_name=_('قالب'), on_delete=models.SET_NULL, null=True)
 
-    def __init__(self) -> None:
+    def __str__(self) -> None:
         return self.owner + ' | ' + self.title
 
     def save(self, *args, **kwargs):
