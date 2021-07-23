@@ -12,6 +12,7 @@ from jsonschema.exceptions import ValidationError as JsonValidationError
 
 from utils.validators import validate_mobile, validate_draft7, validate_template
 from utils.config import THUMBNAIL_DIRECTORY_PATH, TEMPLATE_DIRECTORY_PATH
+from utils.json_validation import generate_validator_darft7
 
 
 User = get_user_model()
@@ -95,6 +96,7 @@ class Template(BasicField, Model):
     def generate_thumbnail(self):
         raise NotImplemented
 
+
 class Invitation(BasicField, Model):
     class Meta:
         verbose_name = _('دعوت‌نامه')
@@ -107,11 +109,11 @@ class Invitation(BasicField, Model):
     template = models.ForeignKey(Template, verbose_name=_('قالب'), on_delete=models.SET_NULL, null=True)
 
     def __str__(self) -> None:
-        return self.owner + ' | ' + self.title
+        return str(self.owner) + ' | ' + self.title
 
     def save(self, *args, **kwargs):
         # validate information with template schema
-        Draft7Validator(self.template.schema).validate(self.informations)
+        Draft7Validator(generate_validator_darft7(self.template.schema['fields'])).validate(self.informations)
         super().save(*args, **kwargs)
 
     @property
