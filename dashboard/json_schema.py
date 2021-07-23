@@ -9,17 +9,21 @@ default_information =  \
 template_field = \
     {
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "type": "array",
-        "items": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string"},
-                "title": {"type": "string"},
-                "field_type": {"enum": ["str", "int", "date", "datetime", "location"]},
-                "is_required": {"type": "boolean"},
-                "max_length": {"type": "number"}
-            },
-            "required": ["name", "title", "field_type", "is_required"]
+        "required": ["fields"],
+        "fields": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/field"}
+        },
+        "$defs": {
+            "field": {
+                "type": "objects",
+                "required": ["name", "title", "field_type", "is_required"],
+                "properties": {
+                    "name": {"type": "string"},
+                    "title": {"type": "string"},
+                    "field_type": {"enum": ["str", "int", "date", "datetime", "location"]},
+                    "is_required": {"type": "boolean"}
+                }
+            }
         }
-
     }
