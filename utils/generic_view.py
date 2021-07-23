@@ -1,7 +1,7 @@
 from django.views.generic import View
-from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import F
+from django.db.models import F, Value
+from django.db.models.functions import Concat
 
 from utils.response import SuccessJsonResponse, BadJsonResponse
 
@@ -52,7 +52,7 @@ class DataTableView(View):
 class Select2View(View):
     http_method_names = ['post', 'get']
     queryset = None
-    search_on = None
+    search_on:list = None
     max_length = 10
     search_key = 'query'
     result_args = None
@@ -60,10 +60,23 @@ class Select2View(View):
 
     def get(self, request, *args, **kwargs):
         search = request.GET.get(self.search_key, '')
-        search_field = {self.search_on+'__icontains': search}
-        # limit output result
-        self.queryset = self.queryset.filter(**search_field)[:self.max_length]
-        # only show required field
+        if len(self.search_on) > 1:
+            _tmp = []
+            for index, value in enumerate(self.search_on):
+                if index != 0 and index % 2 != 0:
+                    _tmp.append(Value(' '))
+                _tmp.append(value)
+
+            self.queryset = self.queryset.annotate(concated=Concat(*_tmp))\
+                                         .filter(concated__icontains=search)[:self.max_length]
+            if not self.result_kwargs:
+                self.result_kwargs = {'text': F('concated')}
+        else:
+            search_field = {self.search_on+'__icontains': search}
+            # limit output result
+            self.queryset = self.queryset.filter(**search_field)[:self.max_length]
+            # only show required field
+        
         result = list(self.queryset.values(*self.result_args, **self.result_kwargs))
         return SuccessJsonResponse({'data': result})
 
