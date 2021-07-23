@@ -85,6 +85,7 @@ class Template(BasicField, Model):
 
     name = models.CharField(max_length=100, verbose_name=_('نام قالب'))
     description = models.CharField(max_length=250, verbose_name=_('توضیحات'))
+    # TODO set default thumbnail
     thumbnail = models.ImageField(null=True, blank=True,
                                   upload_to=THUMBNAIL_DIRECTORY_PATH, verbose_name=_('پیش‌نمایش'))
     schema = models.JSONField(validators=[validate_template], verbose_name=_('ساختار'))
@@ -100,7 +101,7 @@ class Template(BasicField, Model):
 class Invitation(BasicField, Model):
     class Meta:
         verbose_name = _('دعوت‌نامه')
-        verbose_name_plural = _('عوت‌نامه ها')
+        verbose_name_plural = _('دعوت‌نامه ها')
 
     owner = models.ForeignKey(User, verbose_name=_('ایجاد کننده'), on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150, verbose_name=_('عنوان'))
