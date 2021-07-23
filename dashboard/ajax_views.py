@@ -1,9 +1,7 @@
 from django.http import JsonResponse
 from django.views.generic import View
 from django.core.paginator import Paginator
-from django.db.models import F
-
-from django_mysql.models import SetF, ListF
+from django.db.models import F, Value as V
 
 from utils.response import SuccessJsonResponse, BadJsonResponse
 from .mixins import PremissionMixin
@@ -82,9 +80,18 @@ class GetContact(PremissionMixin, DataTableView):
 
 class GetTagSelect2(PremissionMixin, Select2View):
     http_method_names = ['post']
-    search_on = 'name'
+    search_on = ('name', )
     result_args = ('id',)
     result_kwargs = {'text':F('name')}
     def post(self, request, *args, **kwargs):
         self.queryset = Tag.get_by_user(request.user)
+        return super().post(request, *args, **kwargs)
+
+
+class GetContactSelect2(PremissionMixin, Select2View):
+    http_method_names = ['post']
+    search_on = ['first_name', 'last_name']
+    result_args = ('id',)
+    def post(self, request, *args, **kwargs):
+        self.queryset = Contact.get_by_user(request.user)
         return super().post(request, *args, **kwargs)

@@ -109,7 +109,7 @@
                         <input type="checkbox" ‌checked>براساس برچسب<span class="button-indecator"></span>
                     </label>
                 </div>
-                <select class="form-control select-tag" id="select-tag" name="test" multiple>
+                <select class="form-control select-tag" id="select-tag" multiple>
                     <optgroup label="انتخاب کنید">
                     </optgroup>
                 </select>
@@ -128,7 +128,7 @@
                         <input type="checkbox" class="scheduler-send persian-date" ‌checked><span class="button-indecator"></span>
                         <input type="hidden" name="scheduler_send" id="scheduler-send-date-alt">
                     </label>
-                    <input class="form-control scheduler-send-date col-md-4">
+                    <input class="form-control scheduler-send-date col-md-4" style="display: none;">
                 </div>
             </div>
         </div>
@@ -149,10 +149,17 @@
 <script type="text/javascript" src="{% static 'dashboard/js/plugins/persian-date.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'dashboard/js/plugins/persian-datepicker.min.js' %}"></script>
 <script>
+    var URLS = {
+        selectTagUrl: "{% url 'ajax_contact_get_all_select2' %}",
+        allTag: "{% url 'ajax_tag_get_all_select2' %}",
+        allContact: "{% url 'ajax_contact_get_all_select2' %}"
+    }
     $(() => {
         $('#select-tag').select2({
             ajax: {
-                url: "{% url 'ajax_tag_get_all_select2' %}",
+                url: () => {
+                    return URLS.selectTagUrl
+                },
                 type: "post",
                 dataType: 'json',
                 delay: 250,
@@ -211,6 +218,9 @@
 
         // reset radio buttons
         $('input[type=radio]').prop('checked', false);
+        // reset radio checkbox
+        $('input[type=checkbox]').prop('checked', false);
+
     })
 </script>
 {% endblock %}
