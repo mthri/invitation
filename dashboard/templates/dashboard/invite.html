@@ -14,6 +14,24 @@
     body {
         font-family: Vazir;
     }
+
+    /* HIDE RADIO */
+    [type=radio] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* IMAGE STYLES */
+    [type=radio]+img {
+        cursor: pointer;
+    }
+
+    /* CHECKED STYLES */
+    [type=radio]:checked+img {
+        outline: 2px solid #f00;
+    }
 </style>
 {% endblock %}
 
@@ -25,74 +43,60 @@
 
 {% block main %}
 <div class="row">
-    <!-- <div class="col-md-6">
-        <div class="tile">
-            <div class="tile-title-w-btn">
-                <h3 class="title">انتخاب دسته بندی</h3>
-            </div>
-            <div class="tile-body">
-                <select class="form-control select2">
-                    <optgroup label="Select Cities">
-                        <option>Ahmedabad</option>
-                        <option>Surat</option>
-                        <option>Vadodara</option>
-                        <option>Rajkot</option>
-                        <option>Bhavnagar</option>
-                        <option>Jamnagar</option>
-                        <option>Gandhinagar</option>
-                        <option>Nadiad</option>
-                        <option>Morvi</option>
-                        <option>Surendranagar</option>
-                        <option>Junagadh</option>
-                        <option>Gandhidham</option>
-                        <option>Veraval</option>
-                        <option>Ghatlodiya</option>
-                        <option>Bharuch</option>
-                        <option>Anand</option>
-                        <option>Porbandar</option>
-                        <option>Godhra</option>
-                        <option>Navsari</option>
-                        <option>Dahod</option>
-                        <option>Botad</option>
-                        <option>Kapadwanj</option>
-                    </optgroup>
-                </select>
-            </div>
-        </div>
-    </div> -->
     <div class="col-md-12">
         <div class="tile">
             <div class="tile-title-w-btn">
                 <h3 class="title">انتخاب قالب</h3>
             </div>
             <div class="tile-body">
+                {% for template in tempaltes %}
+                    {% if template.thumbnail %}
+                    <label>
+                        <input type="radio" name="template" value="template_{{template.id}}">
+                        <img src="{{template.thumbnail.url}}" name="template_{{template.id}}" width="150px" height="150px" class="mr-5">
+                    </label>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>
     <div class="col-md-12">
-        <div class="tile">
+        {% for template in tempaltes %}
+        <div class="tile" style="display:none" data-template="template_{{template.id}}">
             <div class="tile-title-w-btn">
                 <h3 class="title">اطلاعات دعوت نامه</h3>
             </div>
             <div class="tile-body">
+            <form>
                 <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="title">عنوان</label>
-                        <input class="form-control" id="title" type="text">
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="date">تاریخ</label>
-                        <input class="form-control invite-date persian-date">
-                        <input type="hidden" name="invite_date" id="invite-date-alt">
-
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="address">آدرس</label>
-                        <input class="form-control" id="address" type="text">
-                    </div>
+                {% for field in template.schema.fields %}
+                    {% if field.field_type == 'str' %}
+                        <div class="form-group col-md-4">
+                            <label for="title">{{field.title}}</label>
+                            <input class="form-control" name="{{field.name}}" id="title" type="text">
+                        </div>
+                    {% elif field.field_type == 'int' %}
+                        {# TODO fill it #}
+                    {% elif field.field_type == 'date' %}
+                        <div class="form-group col-md-4">
+                            <label for="title">{{field.title}}</label>
+                            <input class="form-control invite-date persian-date">
+                            <input type="hidden" name="invite_date" id="invite-date-alt">
+                        </div>
+                    {% elif field.field_type == 'datetime' %}
+                        {# TODO fill it #}
+                    {% elif field.field_type == 'location' %}
+                        <div class="form-group col-md-4">
+                            <label for="title">{{field.title}}</label>
+                            <input class="form-control" name="{{field.name}}" id="title" type="text">
+                        </div>
+                    {% endif %}
+                {% endfor %}
                 </div>
+            </form>
             </div>
         </div>
+        {% endfor %}
     </div>
     <div class="col-md-6">
         <div class="tile">
@@ -196,6 +200,17 @@
             let isChecked = $(event.target).is(":checked")
             $('.scheduler-send-date').css('display', (isChecked) ? 'block' : 'none')
         })
+
+        $('input[type=radio][name=template]').change(event => {
+            let element = $(event.target)
+            let templateInfoPanel = document.querySelectorAll(`[data-template='${element.attr('value')}']`)
+            let AllTemplateInfoPanel = document.querySelectorAll('[data-template]')
+            $(AllTemplateInfoPanel).hide()
+            $(templateInfoPanel).show()
+        })
+
+        // reset radio buttons
+        $('input[type=radio]').prop('checked', false);
     })
 </script>
 {% endblock %}

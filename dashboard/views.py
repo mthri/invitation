@@ -1,3 +1,4 @@
+from dashboard.models import Template
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View
@@ -37,7 +38,10 @@ class Setting(PremissionMixin, View):
 class Invite(PremissionMixin, View):
     
     def get(self, request, *args, **kwargs):
-        return render(request, 'dashboard/invite.html')
+        content = {
+            'tempaltes': Template.objects.all()
+        }
+        return render(request, 'dashboard/invite.html', context=content)
 
 
 class InviteHistory(PremissionMixin, View):
