@@ -18,8 +18,10 @@ from django.urls import path, include
 from dashboard.admin import admin_site
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='panel/', permanent=False), name='index'),
     path('admin/', admin_site.urls),
     path('panel/', include('dashboard.urls')),
     path('auth/', include('authentication.urls')),
