@@ -1,14 +1,15 @@
 from django.http import JsonResponse
+from django.http.request import HttpRequest
 from django.views.generic import View
 from django.core.paginator import Paginator
 from django.db.models import F, Value as V
 
 from utils.response import SuccessJsonResponse, BadJsonResponse
-from .mixins import PremissionMixin
+from .mixins import PremissionMixin, JsonValidatorMixin
 from .ajax_forms import AddTagForm
 from .models import Tag, Contact
 from utils.generic_view import DataTableView, Select2View
-
+from .json_schema import invitation_info
 
 class AddTag(PremissionMixin, View):
     http_method_names = ['post', 'options']
@@ -95,3 +96,11 @@ class GetContactSelect2(PremissionMixin, Select2View):
     def post(self, request, *args, **kwargs):
         self.queryset = Contact.get_by_user(request.user)
         return super().post(request, *args, **kwargs)
+
+
+class CreateInviteCard(PremissionMixin, JsonValidatorMixin, View):
+    http_method_names = ['post']
+    json_body_validator = invitation_info
+    
+    def post(self, request:HttpRequest, *args, **kwargs):
+        body = request.body

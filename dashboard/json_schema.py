@@ -27,3 +27,5 @@ template_field = \
             }
         }
     }
+
+invitation_info = ''
