@@ -19,12 +19,15 @@ from utils.json_validation import generate_validator_darft7
 
 User = get_user_model()
 
-class BasicField:
-    created_at = models.DateTimeField(auto_now=True, editable=False, verbose_name=_('تاریخ ایجاد'))
+class BasicField(Model):
+    class Meta:
+        abstract = True
+
+    created_at = models.DateTimeField(auto_now=True, verbose_name=_('تاریخ ایجاد'))
     is_deleted = models.BooleanField(default=False, verbose_name=_('آیا حذف شده است؟'))
 
 
-class Contact(BasicField, Model):
+class Contact(BasicField):
     class Meta:
         verbose_name = _('مخاطب')
         verbose_name_plural = _('مخاطبین')
@@ -60,7 +63,7 @@ class Contact(BasicField, Model):
         ...
 
 
-class Tag(BasicField, Model):
+class Tag(BasicField):
     class Meta:
         verbose_name = _('برچسب')
         verbose_name_plural = _('برچسب ها')
@@ -80,7 +83,7 @@ class Tag(BasicField, Model):
         return Tag.objects.filter(owner=user)
        
 
-class Template(BasicField, Model):
+class Template(BasicField):
     class Meta:
         verbose_name = _('قالب')
         verbose_name_plural = _('قالب ها')
@@ -104,7 +107,7 @@ class Template(BasicField, Model):
         raise NotImplemented
 
 
-class Invitation(BasicField, Model):
+class Invitation(BasicField):
     class Meta:
         verbose_name = _('دعوت‌نامه')
         verbose_name_plural = _('دعوت‌نامه ها')
@@ -161,7 +164,7 @@ class Invitation(BasicField, Model):
         
         InvitationCard.create_invitation_card(invitation, contact_list)
 
-class InvitationCard(BasicField, Model):
+class InvitationCard(BasicField):
 
     class Meta:
         verbose_name = _('کارت دعوت')
