@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.mixins import AccessMixin
 from django.http.request import HttpRequest
 from django.http.response import HttpResponseBadRequest
@@ -17,9 +19,10 @@ class JsonValidatorMixin(object):
     #TODO check content type must be a json
     def dispatch(self, request:HttpRequest, *args, **kwargs):
         if not self.json_body_schema:
-            raise AttributeError('Pleas set `json_body_schema`')
+            raise AttributeError('Please set `json_body_schema`')
         try:
-            Draft7Validator(self.json_body_schema).validate(request.body)
+            self.json_body = json.loads(request.body.decode('utf8'))
+            Draft7Validator(self.json_body_schema).validate(self.json_body)
             return super().dispatch(request, *args, **kwargs)
         except JsonValidationError:
             return HttpResponseBadRequest()
