@@ -72,6 +72,7 @@ class Select2View(View):
             if not self.result_kwargs:
                 self.result_kwargs = {'text': F('concated')}
         else:
+            self.search_on = self.search_on[0]
             search_field = {self.search_on+'__icontains': search}
             # limit output result
             self.queryset = self.queryset.filter(**search_field)[:self.max_length]
