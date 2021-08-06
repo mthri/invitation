@@ -1,6 +1,8 @@
-from typing import List
+from typing import List, Optional
 import uuid
+from datetime import datetime
 
+from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -90,6 +92,10 @@ class Template(BasicField, Model):
                                   upload_to=THUMBNAIL_DIRECTORY_PATH, verbose_name=_('پیش‌نمایش'))
     schema = models.JSONField(validators=[validate_template], verbose_name=_('ساختار'))
     path = models.FileField(verbose_name=_('فایل قالب'), upload_to=TEMPLATE_DIRECTORY_PATH, default='')
+
+    @staticmethod
+    def by_id(template_id:int) -> Optional['Template']:
+        return Template.objects.filter(pk=template_id).first()
     
     def __str__(self) -> str:
         return self.name + ' | ' + self.description
@@ -104,7 +110,7 @@ class Invitation(BasicField, Model):
         verbose_name_plural = _('دعوت‌نامه ها')
 
     owner = models.ForeignKey(User, verbose_name=_('ایجاد کننده'), on_delete=models.SET_NULL, null=True)
-    title = models.CharField(max_length=150, verbose_name=_('عنوان'))
+    title = models.CharField(max_length=150, verbose_name=_('عنوان'), default=_('ندارد'))
     send_at = models.DateTimeField(null=True, blank=True, verbose_name=_('ارسال در تاریخ'))
     informations = models.JSONField(validators=[validate_draft7], verbose_name=_('اطلاعات اضافی'))
     template = models.ForeignKey(Template, verbose_name=_('قالب'), on_delete=models.SET_NULL, null=True)
@@ -124,7 +130,65 @@ class Invitation(BasicField, Model):
     @property
     def is_information_valid(self) -> bool:
         try:
-            Draft7Validator(self.template.schema).validate(self.informations)
+            Draft7Validator(generate_validator_darft7(self.template.schema['fields'])).validate(self.informations)
             return True
         except JsonValidationError:
             return False
+
+
+    @staticmethod
+    def create_invitation(user:User, template:Template, information:dict, is_schedule:bool, contacts:List = None, 
+                          tags:List = None, send_at:datetime = None):
+        
+        invitation = Invitation(owner=user, template=template, informations=information)
+
+        if is_schedule and send_at:
+            invitation.send_at = send_at
+        
+        if not invitation.is_information_valid:
+            raise ValueError('schema error')
+        else:
+            invitation.save()
+
+        contact_list = []
+
+        if contacts:
+            contact_list += list(Contact.objects.filter(id__in=contacts))
+        
+        if tags:
+            user_contact = Contact.get_by_user(user)
+            contact_list += list(user_contact.filter(tags__contains=tags))
+        
+        InvitationCard.create_invitation_card(invitation, contact_list)
+
+class InvitationCard(BasicField, Model):
+
+    class Meta:
+        verbose_name = _('کارت دعوت')
+        verbose_name_plural = _('کارت های دعوت')
+        index_together = ["invitation", "is_sent"]
+
+
+    id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, db_index=True)
+    invitation = models.ForeignKey(Invitation, verbose_name=_('دعوت'), blank=False, 
+                                   null=True, on_delete=models.DO_NOTHING)
+    contact = models.ForeignKey(Contact, verbose_name=_('مخاطب'), null=True, 
+                                blank=False, on_delete=models.DO_NOTHING)
+    is_sent = models.BooleanField(default=False, editable=True, verbose_name=_('ارسال شده'))
+
+    def __str__(self) -> str:
+        return f'{self.contact} | {self.invitation}  | ' + ('ارسال شده' if self.is_sent else 'ارسال نشده')
+
+
+    @staticmethod
+    @transaction.atomic
+    def create_invitation_card(invitation:Invitation, contacts:List[Contact]) -> None:
+        invitation_card_bunch = []
+        for contact in contacts:
+            invitation_card_bunch.append(InvitationCard(
+                invitation=invitation,
+                contact=contact
+            ))
+        
+        InvitationCard.objects.bulk_create(invitation_card_bunch, batch_size=100)
+
