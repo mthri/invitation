@@ -28,4 +28,13 @@ template_field = \
         }
     }
 
-invitation_info = ''
+create_invite_card = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "required": ["template", "templateInfoPanel", "tagBase", "contactOrTag", "isScheduler", "sendDateTime"],
+    "template": {"type": "integer"},
+    "templateInfoPanel": {"type": "object"},
+    "tagBase": {"type": "boolean"},
+    "contactOrTag": {"type": "array"},
+    "isScheduler": {"type": "boolean"},
+    "sendDateTime": {"type": "integer"}
+}

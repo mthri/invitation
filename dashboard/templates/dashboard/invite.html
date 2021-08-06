@@ -52,7 +52,7 @@
                 {% for template in tempaltes %}
                     {% if template.thumbnail %}
                     <label>
-                        <input type="radio" name="template" value="template_{{template.id}}">
+                        <input type="radio" name="template" value="template_{{template.id}}" data-id="{{template.id}}">
                         <img src="{{template.thumbnail.url}}" name="template_{{template.id}}" width="150px" height="150px" class="mr-5">
                     </label>
                     {% endif %}
@@ -60,7 +60,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12"> 
         {% for template in tempaltes %}
         <div class="tile" style="display:none" data-template="template_{{template.id}}">
             <div class="tile-title-w-btn">
@@ -81,7 +81,7 @@
                         <div class="form-group col-md-4">
                             <label for="title">{{field.title}}</label>
                             <input class="form-control invite-date persian-date">
-                            <input type="hidden" name="invite_date" id="invite-date-alt">
+                            <input type="hidden" name="{{field.name}}" id="invite-date-alt">
                         </div>
                     {% elif field.field_type == 'datetime' %}
                         {# TODO fill it #}
@@ -106,10 +106,10 @@
             <div class="tile-body">
                 <div class="toggle lg">
                     <label>
-                        <input type="checkbox" ‌checked>براساس برچسب<span class="button-indecator"></span>
+                        <input type="checkbox" id="tagBase" ‌checked>براساس برچسب<span class="button-indecator"></span>
                     </label>
                 </div>
-                <select class="form-control select-tag" id="select-tag" multiple>
+                <select class="form-control select-tag" id="select-tag-user" multiple>
                     <optgroup label="انتخاب کنید">
                     </optgroup>
                 </select>
@@ -134,7 +134,7 @@
         </div>
     </div>
     <div class="col-md-4"></div>
-    <button class="btn btn-primary col-md-4">نهایی سازی</button>
+    <button class="btn btn-primary col-md-4" id="submitInvitiotn">نهایی سازی</button>
     <div class="col-md-4"></div>
 </div>
 {% endblock %}
@@ -155,7 +155,7 @@
         allContact: "{% url 'ajax_contact_get_all_select2' %}"
     }
     $(() => {
-        $('#select-tag').select2({
+        let selectTagUser = $('#select-tag-user').select2({
             ajax: {
                 url: () => {
                     return URLS.selectTagUrl
@@ -221,6 +221,54 @@
         // reset radio checkbox
         $('input[type=checkbox]').prop('checked', false);
 
+        $('#submitInvitiotn').click(event => {
+            let selectedTemplate = $('input[name=template]:checked')
+            let templateInfoPanel = document.querySelectorAll(`[data-template='${selectedTemplate.attr('value')}']`)
+            templateInfoPanel = formToObject($(templateInfoPanel).find('form'))
+            payload = {
+                template: selectedTemplate.data('id'),
+                templateInfoPanel: templateInfoPanel,
+                tagBase: $('#tagBase').is(":checked"),
+                contactOrTag: $('#select-tag-user').val(),
+                isScheduler: $('.scheduler-send').is(":checked"),
+                sendDateTime: $('#scheduler-send-date-alt').val(),
+            }
+            console.log(JSON.stringify(payload))
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'ajax_create_invition' %}",
+                headers: { 'X-CSRFToken': '{{csrf_token}}' },
+                data: JSON.stringify(payload),
+                dataType: 'json',
+                contentType: 'application/json'
+            }).done(data => {
+                alert('success')
+            }).fail(errors => {
+                alert('fail')
+            })
+        })
+        
+        $('#tagBase').change(event =>{
+            selectTagUser.empty()
+
+            if ($(event.target).is(":checked")) {
+                URLS.selectTagUrl = URLS.allTag
+            } else {
+                URLS.selectTagUrl = URLS.allContact
+            }
+        })
+
     })
+
+    function formToObject(form){
+        let data = $(form).serializeArray()
+        let formObject = {}
+
+        for (let index = 0; index < data.length; index++) {
+            formObject[data[index].name] = data[index].value
+        }
+
+        return formObject
+    }
 </script>
 {% endblock %}

@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.http import JsonResponse
 from django.http.request import HttpRequest
 from django.views.generic import View
@@ -7,9 +8,9 @@ from django.db.models import F, Value as V
 from utils.response import SuccessJsonResponse, BadJsonResponse
 from .mixins import PremissionMixin, JsonValidatorMixin
 from .ajax_forms import AddTagForm
-from .models import Tag, Contact
+from .models import Invitation, Tag, Contact, Template
 from utils.generic_view import DataTableView, Select2View
-from .json_schema import invitation_info
+from .json_schema import create_invite_card
 
 class AddTag(PremissionMixin, View):
     http_method_names = ['post', 'options']
@@ -100,7 +101,23 @@ class GetContactSelect2(PremissionMixin, Select2View):
 
 class CreateInviteCard(PremissionMixin, JsonValidatorMixin, View):
     http_method_names = ['post']
-    json_body_validator = invitation_info
+    json_body_schema = create_invite_card
     
     def post(self, request:HttpRequest, *args, **kwargs):
-        body = request.body
+        template = Template.by_id(self.json_body['template'])
+        
+        if not template:
+            return BadJsonResponse({'message': 'template not found'})
+
+        self.json_body['sendDateTime'] = datetime.fromtimestamp(int(self.json_body['sendDateTime'][:10]))
+        
+        if self.json_body['tagBase']:
+            Invitation.create_invitation(request.user, template, 
+                                         self.json_body['templateInfoPanel'], self.json_body['isScheduler'], 
+                                         tags=self.json_body['contactOrTag'], send_at=self.json_body['sendDateTime'])
+        else:
+            Invitation.create_invitation(request.user, template, 
+                                         self.json_body['templateInfoPanel'], self.json_body['isScheduler'], 
+                                         contacts=self.json_body['contactOrTag'], send_at=self.json_body['sendDateTime'])
+
+        return SuccessJsonResponse()
