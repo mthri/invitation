@@ -6,7 +6,7 @@ from django.db.models.fields.json import JSONField
 from django.utils.translation import ugettext_lazy as _
 from django.forms import widgets
 
-from .models import Contact, Tag, Invitation, Template
+from .models import Contact, Tag, Invitation, Template, InvitationCard
 
 class CustomAdmin(admin.AdminSite):
     site_header = _('سامانه دعوت نامه')
@@ -56,3 +56,9 @@ class TemplateAdmin(JsonAdmin):
 @admin.register(Invitation, site=admin_site)
 class InvitationAdmin(JsonAdmin):
     raw_id_fields = ('owner',)
+
+
+@admin.register(InvitationCard, site=admin_site)
+class InvitationCardAdmin(JsonAdmin):
+    readonly_fields = ('invitation', 'contact')
+
