@@ -80,6 +80,16 @@ class GetContact(PremissionMixin, DataTableView):
         return super().post(request, *args, **kwargs)
 
 
+class RemoveContact(PremissionMixin, View):
+    http_method_names = ['post']
+
+    def post(self, request, contact_id: str, *args, **kwargs):
+        contact_id = contact_id.strip()
+        user_contact = Contact.get_by_user(request.user)
+        user_contact.filter(id=contact_id).update(is_deleted=True)
+        return SuccessJsonResponse()
+
+
 class GetTagSelect2(PremissionMixin, Select2View):
     http_method_names = ['post']
     search_on = ('name', )

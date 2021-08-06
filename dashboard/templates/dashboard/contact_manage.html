@@ -135,13 +135,14 @@
         <div class="tile">
           <div class="tile-body">
             <div class="table-responsive">
-              <table class="table table-hover table-bordered" id="sampleTable" style="width: 100;">
+              <table class="table table-hover table-bordered" id="contactTable" style="width: 100;">
                 <thead>
                     <tr>
                         <th>نام</th>
                         <th>نام خانوادگی</th>
                         <th>تاریخ ایجاد</th>
                         <th>برچسب ها</th>
+                        <th>عملیات</th>
                     </tr>
                 </thead>
                 <table>
@@ -162,9 +163,13 @@
 <script type="text/javascript" src="{% static 'dashboard/js/plugins/dataTables.bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'dashboard/js/persian-datatable.js' %}"></script>
 <script>
-    $('.select2').select2();
-    $('#sampleTable').DataTable({
-        paging: true,
+    var csrf_token = 'csrfmiddlewaretoken={{csrf_token}}'
+    var table = null
+    $(() => {
+        $('.select2').select2()
+
+        table = $('#contactTable').DataTable({
+            paging: true,
             pageLength: 10,
             searching: true,
             fixedColumns: true,
@@ -191,17 +196,40 @@
                 },
                 {
                     data: 'created',
-                    render: (date)=>{
+                    render: (date) => {
                         return new Date(date).toLocaleDateString('fa-IR');
                     }
                 },
                 {
                     data: 'tags'
+                },
+                {
+                    data: 'id',
+                    render: (data) => {
+                        return `<a href="#" onclick="deleteContact(\'${data}\')" >حذف</a>`
+                    }
                 }
             ],
             language: datatablePersianLang,
-    });
+        });
+    
+        
+    
+    })
     // var formError = {{errors|safe}}
     // showError(formError)
+
+    function deleteContact(id) {
+            $.ajax({
+                method: 'POST',
+                url: "{% url 'ajax_contact_remove' ' '%}"+id,
+                data: csrf_token
+            }).done(data=>{
+                table.ajax.reload();
+            }).fail(error=>{
+                table.ajax.reload();
+            })
+        }
+    
 </script>
 {% endblock %}
