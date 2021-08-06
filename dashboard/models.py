@@ -31,8 +31,7 @@ class Contact(BasicField):
     class Meta:
         verbose_name = _('مخاطب')
         verbose_name_plural = _('مخاطبین')
-        index_together = ["owner", "phone"]
-        unique_together = ["owner", "phone"]
+        index_together = ['owner', 'phone']
 
 
     id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
@@ -51,7 +50,7 @@ class Contact(BasicField):
 
     @staticmethod
     def get_by_user(user:User):
-        return Contact.objects.filter(owner=user)
+        return Contact.objects.filter(owner=user).exclude(is_deleted=True)
 
     @staticmethod
     def sync(contacts: List['Contact']) -> None:
