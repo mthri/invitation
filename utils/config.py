@@ -5,6 +5,7 @@ import yaml
 
 THUMBNAIL_DIRECTORY_PATH = 'thumbnail/'
 TEMPLATE_DIRECTORY_PATH = 'templates/'
+CSV_DIRECTORY_PATH = 'csv/'
 
 def _get_config():
     BASE_DIR = str(Path(__file__).resolve().parent.parent)

@@ -23,22 +23,27 @@
             <div class="tile-title-w-btn">
                 <h3 class="title">بارگزاری مخاطبین جدید</h3>
             </div>
-            <div class="tile-body">
-                <div class="form-group">
-                    <label class="control-label">انتخاب برچسب</label>
-                    <select class="form-control select-tag" multiple="">
-                    </select>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="tile-body">
+                    <div class="form-group">
+                        <label class="control-label">انتخاب برچسب</label>
+                        <select class="form-control select-tag" name="tags" multiple>
+                            <optgroup label="انتخاب کنید">
+                            </optgroup>
+                        </select>
+                    </div>
+                    <!-- <div class="dropzone text-center">
+                        <div class="dz-message">فایل خود را اینجا رها کنید<br><small class="text-info">(پسوند های مجاز: csv)</small></div>
+                    </div> -->
+                    <input class="form-control" type="file" name="file">
+                    <a href="/{{csv_sample}}">دریافت نمونه</a>
                 </div>
-                <form class="text-center dropzone" method="POST" enctype="multipart/form-data" action="/file-upload">
-                    <div class="dz-message">فایل خود را اینجا رها کنید<br><small class="text-info">(پسوند های مجاز: csv,
-                            xls)</small></div>
-                </form>
-                <a href="#">دریافت نمونه</a>
-            </div>
-            <div class="tile-footer">
-                <button class="btn btn-primary" type="submit"><i
-                        class="fa fa-fw fa-lg fa-check-circle"></i>بارگزاری</button>&nbsp;&nbsp;&nbsp;
-            </div>
+                <div class="tile-footer">
+                    <button class="btn btn-primary" type="submit"><i
+                            class="fa fa-fw fa-lg fa-check-circle"></i>بارگزاری</button>&nbsp;&nbsp;&nbsp;
+                </div>
+            </form>
         </div>
     </div>
     <div class="col-md-6">
