@@ -66,9 +66,8 @@ class Contact(BasicField):
                        phone, tags:List, communicative_road:dict) -> 'Contact':
 
         tags = [int(tag) for tag in tags]
-        user_tag = set(Tag.get_by_user(user).values_list('id', flat=True))
         # only user tag can be use
-        user_tag = user_tag.intersection(tags)
+        user_tag = Tag.validate_tags(user, tags)
 
         contact = Contact(
             first_name=first_name,
@@ -102,6 +101,11 @@ class Tag(BasicField):
     def get_by_user(user:User):
         return Tag.objects.filter(owner=user)
        
+    @staticmethod
+    def validate_tags(user:User, tags:List) -> set:
+        user_tag = set(Tag.get_by_user(user).values_list('id', flat=True))
+        user_tag = user_tag.intersection(tags)
+        return user_tag
 
 class Template(BasicField):
     class Meta:
