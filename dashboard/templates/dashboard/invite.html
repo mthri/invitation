@@ -233,7 +233,6 @@
                 isScheduler: $('.scheduler-send').is(":checked"),
                 sendDateTime: $('#scheduler-send-date-alt').val(),
             }
-            console.log(JSON.stringify(payload))
             $.ajax({
                 type: 'POST',
                 url: "{% url 'ajax_create_invition' %}",

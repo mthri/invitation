@@ -41,7 +41,7 @@ class Contact(BasicField):
                               verbose_name=_('مالک'), related_name='contacts', 
                               null=True, db_index=True)
     phone = models.CharField(max_length=11, validators=[validate_mobile], null=True, verbose_name=_('تلفن همراه'))
-    communicative_road = models.JSONField(verbose_name=('راه های ارتباطی'))
+    communicative_road = models.JSONField(verbose_name=('راه های ارتباطی'), null=True, blank=True)
     tags = SetCharField(base_field=models.IntegerField(), size=10, max_length=(10*3), 
                         verbose_name=_('تگ'), null=True, blank=True)
 
@@ -61,6 +61,27 @@ class Contact(BasicField):
         # TODO used `bulk_update` https://docs.djangoproject.com/en/3.2/ref/models/querysets/#bulk-update
         ...
 
+    @staticmethod
+    def create_contact(first_name:str, last_name:str, user:User,
+                       phone, tags:List, communicative_road:dict) -> 'Contact':
+
+        tags = [int(tag) for tag in tags]
+        user_tag = set(Tag.get_by_user(user).values_list('id', flat=True))
+        # only user tag can be use
+        user_tag = user_tag.intersection(tags)
+
+        contact = Contact(
+            first_name=first_name,
+            last_name=last_name,
+            owner=user,
+            phone=phone,
+            tags=user_tag,
+            communicative_road=communicative_road
+        )
+
+        contact.save()
+        
+        return contact
 
 class Tag(BasicField):
     class Meta:

@@ -2,15 +2,16 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.http.request import HttpRequest
 from django.views.generic import View
-from django.core.paginator import Paginator
 from django.db.models import F, Value as V
+from django.utils.translation import ugettext_lazy as _
 
 from utils.response import SuccessJsonResponse, BadJsonResponse
 from .mixins import PremissionMixin, JsonValidatorMixin
 from .ajax_forms import AddTagForm
 from .models import Invitation, Tag, Contact, Template
 from utils.generic_view import DataTableView, Select2View
-from .json_schema import create_invite_card
+from .json_schema import create_invite_card, communicates
+from utils.validators import is_phone_number
 
 class AddTag(PremissionMixin, View):
     http_method_names = ['post', 'options']
@@ -66,6 +67,29 @@ class RemoveTag(PremissionMixin, View):
         return SuccessJsonResponse()
 
 
+class AddContact(PremissionMixin, JsonValidatorMixin, View):
+    http_method_names = ['post']
+    json_body_schema = communicates
+    
+    def post(self, request:HttpRequest, *args, **kwargs):
+    
+        if not is_phone_number(self.json_body['phone']):
+            return BadJsonResponse({'message': _('فرمت تلفن همراه صحیح نمی باشد')})
+        
+        communicative_road = {}
+        # from now only support email (future: telegram)
+        if self.json_body.get('email'):
+            communicative_road = {
+                'email': self.json_body['email']
+            }
+
+        Contact.create_contact(first_name=self.json_body['first_name'], last_name=self.json_body['last_name'], 
+                               user=request.user, phone=self.json_body['phone'], tags=self.json_body['tags'], 
+                               communicative_road=communicative_road)
+        
+        return SuccessJsonResponse({})
+
+
 class GetContact(PremissionMixin, DataTableView):
     result_args = ('id', 'tags',)
     result_kwargs = {'firstName': F('first_name'), 
@@ -117,7 +141,7 @@ class CreateInviteCard(PremissionMixin, JsonValidatorMixin, View):
         template = Template.by_id(self.json_body['template'])
         
         if not template:
-            return BadJsonResponse({'message': 'template not found'})
+            return BadJsonResponse({'message': 'قالب یافت نشد'})
 
         self.json_body['sendDateTime'] = datetime.fromtimestamp(int(self.json_body['sendDateTime'][:10]))
         

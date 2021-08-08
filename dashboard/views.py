@@ -43,7 +43,6 @@ class Invite(PremissionMixin, View):
         }
         return render(request, 'dashboard/invite.html', context=content)
 
-
 class InviteHistory(PremissionMixin, View):
 
     def get(self, request, *args, **kwargs):

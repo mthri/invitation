@@ -28,13 +28,26 @@ template_field = \
         }
     }
 
-create_invite_card = {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "required": ["template", "templateInfoPanel", "tagBase", "contactOrTag", "isScheduler", "sendDateTime"],
-    "template": {"type": "integer"},
-    "templateInfoPanel": {"type": "object"},
-    "tagBase": {"type": "boolean"},
-    "contactOrTag": {"type": "array"},
-    "isScheduler": {"type": "boolean"},
-    "sendDateTime": {"type": "integer"}
-}
+create_invite_card = \
+    {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "required": ["template", "templateInfoPanel", "tagBase", "contactOrTag", "isScheduler", "sendDateTime"],
+        "template": {"type": "integer"},
+        "templateInfoPanel": {"type": "object"},
+        "tagBase": {"type": "boolean"},
+        "contactOrTag": {"type": "array"},
+        "isScheduler": {"type": "boolean"},
+        "sendDateTime": {"type": "integer"}
+    }
+
+communicates = \
+    {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "required": ["first_name", "last_name", "phone", "email"],
+        "first_name": {"type": "string"},
+        "last_name": {"type": "string"},
+        "phone": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "number"}},
+        "email": {"type": "string", "format": "email"},
+        "by_phone": {"type": "string", "enum": ["TLG", "WAP"]}
+    }

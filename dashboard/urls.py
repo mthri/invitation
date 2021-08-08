@@ -20,6 +20,7 @@ urlpatterns += [
     path('ajax/tag/remove/<int:tag_id>', ajax_views.RemoveTag.as_view(), name='ajax_tag_remove'),
     path('ajax/contact/get/all', ajax_views.GetContact.as_view(), name='ajax_contact_get_all'),
     path('ajax/contact/remove/<str:contact_id>', ajax_views.RemoveContact.as_view(), name='ajax_contact_remove'),
+    path('ajax/contact/add', ajax_views.AddContact.as_view(), name='ajax_contact_add'),
     path('ajax/tag/get/all/select2', ajax_views.GetTagSelect2.as_view(), name='ajax_tag_get_all_select2'),
     path('ajax/user/get/all/select2', ajax_views.GetContactSelect2.as_view(), name='ajax_contact_get_all_select2'),
     path('ajax/invition/add', ajax_views.CreateInviteCard.as_view(), name='ajax_create_invition'),

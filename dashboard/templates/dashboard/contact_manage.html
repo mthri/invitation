@@ -26,37 +26,14 @@
             <div class="tile-body">
                 <div class="form-group">
                     <label class="control-label">انتخاب برچسب</label>
-                    <select class="form-control select2" multiple="">
-                        <optgroup label="Select Cities">
-                            <option>Ahmedabad</option>
-                            <option>Surat</option>
-                            <option>Vadodara</option>
-                            <option>Rajkot</option>
-                            <option>Bhavnagar</option>
-                            <option>Jamnagar</option>
-                            <option>Gandhinagar</option>
-                            <option>Nadiad</option>
-                            <option>Morvi</option>
-                            <option>Surendranagar</option>
-                            <option>Junagadh</option>
-                            <option>Gandhidham</option>
-                            <option>Veraval</option>
-                            <option>Ghatlodiya</option>
-                            <option>Bharuch</option>
-                            <option>Anand</option>
-                            <option>Porbandar</option>
-                            <option>Godhra</option>
-                            <option>Navsari</option>
-                            <option>Dahod</option>
-                            <option>Botad</option>
-                            <option>Kapadwanj</option>
-                        </optgroup>
+                    <select class="form-control select-tag" multiple="">
                     </select>
                 </div>
                 <form class="text-center dropzone" method="POST" enctype="multipart/form-data" action="/file-upload">
                     <div class="dz-message">فایل خود را اینجا رها کنید<br><small class="text-info">(پسوند های مجاز: csv,
                             xls)</small></div>
                 </form>
+                <a href="#">دریافت نمونه</a>
             </div>
             <div class="tile-footer">
                 <button class="btn btn-primary" type="submit"><i
@@ -68,67 +45,47 @@
         <div class="tile">
             <div class="tile-title-w-btn">
                 <h3 class="title">اضافه کردن مخاطب (دستی)</h3>
-                <p><a class="btn btn-primary icon-btn" href="#"><i class="fa fa-plus"></i>فیلد </a></p>
+                <!-- <p><a class="btn btn-primary icon-btn" href="#"><i class="fa fa-plus"></i>فیلد </a></p> -->
             </div>
-            <div class="tile-body">
-                <div class="form-group">
-                    <label class="control-label">انتخاب برچسب</label>
-                    <select class="form-control select2" multiple="">
-                        <optgroup label="Select Cities">
-                            <option>Ahmedabad</option>
-                            <option>Surat</option>
-                            <option>Vadodara</option>
-                            <option>Rajkot</option>
-                            <option>Bhavnagar</option>
-                            <option>Jamnagar</option>
-                            <option>Gandhinagar</option>
-                            <option>Nadiad</option>
-                            <option>Morvi</option>
-                            <option>Surendranagar</option>
-                            <option>Junagadh</option>
-                            <option>Gandhidham</option>
-                            <option>Veraval</option>
-                            <option>Ghatlodiya</option>
-                            <option>Bharuch</option>
-                            <option>Anand</option>
-                            <option>Porbandar</option>
-                            <option>Godhra</option>
-                            <option>Navsari</option>
-                            <option>Dahod</option>
-                            <option>Botad</option>
-                            <option>Kapadwanj</option>
-                        </optgroup>
-                    </select>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label class="control-label">نام</label>
-                        <input class="form-control" type="text">
+            <form id="addContactForm">
+                <div class="tile-body">
+                    <div class="form-group">
+                        <label class="control-label">انتخاب برچسب</label>
+                        <select class="form-control select-tag" name="tags" multiple>
+                            <optgroup label="انتخاب کنید">
+                            </optgroup>
+                        </select>
                     </div>
-                    <div class="form-group col-md-6">
-                        <label class="control-label">نام خانوادگی</label>
-                        <input class="form-control" type="text">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="control-label">نام</label>
+                            <input class="form-control" type="text" name="first_name" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">نام خانوادگی</label>
+                            <input class="form-control" type="text" name="last_name" required>
+                        </div>
                     </div>
-                </div>
 
+                    <div class="form-group">
+                        <label class="control-label">تلفن همراه</label>
+                        <input class="form-control mobile-check" type="text" maxlength="11" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">ایمیل</label>
+                        <input class="form-control" type="email" name="email">
+                    </div>
+                    <!--
                 <div class="form-group">
-                    <label class="control-label">تلفن همراه</label>
-                    <input class="form-control" type="text">
+                    <label class="control-label">تلگرام</label>
+                    <input class="form-control" type="text" >
+                </div> -->
                 </div>
-                <div class="form-group">
-                    <label class="control-label">ایمیل</label>
-                    <input class="form-control" type="text">
+                <div class="tile-footer">
+                    <button class="btn btn-primary" type="submit" id="addContact"><i
+                            class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
                 </div>
-                <!--
-            <div class="form-group">
-                <label class="control-label">تلگرام</label>
-                <input class="form-control" type="text" >
-            </div> -->
-            </div>
-            <div class="tile-footer">
-                <button class="btn btn-primary" type="submit"><i
-                        class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
-            </div>
+            </form>
         </div>
     </div>
     <div class="col-md-12">
@@ -166,7 +123,32 @@
     var csrf_token = 'csrfmiddlewaretoken={{csrf_token}}'
     var table = null
     $(() => {
-        $('.select2').select2()
+        $('.select-tag').select2({
+            ajax: {
+                url: "{% url 'ajax_tag_get_all_select2' %}",
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        csrfmiddlewaretoken: "{{csrf_token}}",
+                        query: params.term
+                    };
+                },
+                processResults: function (response) {
+                    return {
+                        results: response.data
+                    };
+                },
+                cache: true,
+            },
+            dir: "rtl",
+            language: {
+                noResults: () => {
+                    return "موردی یافت نشد!";
+                }
+            },
+        });
 
         table = $('#contactTable').DataTable({
             paging: true,
@@ -212,12 +194,26 @@
             ],
             language: datatablePersianLang,
         });
-    
         
-    
+        $('#addContactForm').submit(event => {
+            event.preventDefault()
+            let formObject = formToObject(event.target)
+            formObject.tags = $(event.target).find('select[name=tags]').val()
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'ajax_contact_add' %}",
+                headers: { 'X-CSRFToken': '{{csrf_token}}' },
+                data: JSON.stringify(formObject),
+                dataType: 'json',
+                contentType: 'application/json'
+            }).done(data => {
+                $(event.target).trigger('reset')
+                table.ajax.reload();
+            }).fail(errors => {
+                alert('fail')
+            })
+        })
     })
-    // var formError = {{errors|safe}}
-    // showError(formError)
 
     function deleteContact(id) {
             $.ajax({
@@ -231,5 +227,15 @@
             })
         }
     
+    function formToObject(form){
+        let data = $(form).serializeArray()
+        let formObject = {}
+
+        for (let index = 0; index < data.length; index++) {
+            formObject[data[index].name] = data[index].value
+        }
+
+        return formObject
+    }
 </script>
 {% endblock %}
