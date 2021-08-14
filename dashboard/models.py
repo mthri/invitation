@@ -184,9 +184,13 @@ class Invitation(BasicField):
         
         if tags:
             user_contact = Contact.get_by_user(user)
-            contact_list += list(user_contact.filter(tags__contains=tags))
+            contact_list += list(user_contact.filter(tags__in=tags))
         
         InvitationCard.create_invitation_card(invitation, contact_list)
+
+    @staticmethod
+    def get_by_user(user):
+        return Invitation.objects.filter(owner=user).exclude(is_deleted=True)
 
 class InvitationCard(BasicField):
 
@@ -198,7 +202,7 @@ class InvitationCard(BasicField):
 
     id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, db_index=True)
     invitation = models.ForeignKey(Invitation, verbose_name=_('دعوت'), blank=False, 
-                                   null=True, on_delete=models.DO_NOTHING)
+                                   null=True, on_delete=models.DO_NOTHING, related_name='cards')
     contact = models.ForeignKey(Contact, verbose_name=_('مخاطب'), null=True, 
                                 blank=False, on_delete=models.DO_NOTHING)
     is_sent = models.BooleanField(default=False, editable=True, verbose_name=_('ارسال شده'))

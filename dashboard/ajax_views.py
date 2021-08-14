@@ -2,7 +2,7 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.http.request import HttpRequest
 from django.views.generic import View
-from django.db.models import F, Value as V
+from django.db.models import F, Count, Value as V
 from django.utils.translation import ugettext_lazy as _
 
 from utils.response import SuccessJsonResponse, BadJsonResponse
@@ -12,6 +12,7 @@ from .models import Invitation, Tag, Contact, Template
 from utils.generic_view import DataTableView, Select2View
 from .json_schema import create_invite_card, communicates
 from utils.validators import is_phone_number
+from utils.time import format_date
 
 class AddTag(PremissionMixin, View):
     http_method_names = ['post', 'options']
@@ -97,7 +98,7 @@ class GetContact(PremissionMixin, DataTableView):
                      'created': F('created_at'),
                      'contactInfo': F('communicative_road')}
 
-    search_on = 'last_name'
+    search_on = ('last_name', )
 
     def post(self, request, *args, **kwargs):
         self.queryset = Contact.get_by_user(request.user)
@@ -155,3 +156,27 @@ class CreateInviteCard(PremissionMixin, JsonValidatorMixin, View):
                                          contacts=self.json_body['contactOrTag'], send_at=self.json_body['sendDateTime'])
 
         return SuccessJsonResponse()
+
+
+class GetInvititon(PremissionMixin, DataTableView):
+    result_args = ('id', 'title')
+    result_kwargs = {'cardCount': F('card_count'),
+                     'sendAt': F('send_at')}
+
+    search_on = ('title', )
+
+    def post(self, request, *args, **kwargs):
+        start_date = request.POST.get('startDate')
+        # end_date = request.POST.get('endDate')
+
+        self.queryset = Invitation.get_by_user(request.user)
+        if start_date and start_date.strip():
+            start_date = format_date(start_date)
+            self.queryset = self.queryset.filter(send_at__gte=start_date)
+
+        # if end_date and end_date.strip():
+        #     end_date = format_date(end_date)
+        #     self.queryset.filter(send_at__lte=end_date)
+
+        self.queryset = self.queryset.annotate(card_count=Count('cards'))
+        return super().post(request, *args, **kwargs)

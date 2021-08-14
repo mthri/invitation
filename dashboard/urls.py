@@ -24,4 +24,5 @@ urlpatterns += [
     path('ajax/tag/get/all/select2', ajax_views.GetTagSelect2.as_view(), name='ajax_tag_get_all_select2'),
     path('ajax/user/get/all/select2', ajax_views.GetContactSelect2.as_view(), name='ajax_contact_get_all_select2'),
     path('ajax/invition/add', ajax_views.CreateInviteCard.as_view(), name='ajax_create_invition'),
+    path('ajax/invition/get/all', ajax_views.GetInvititon.as_view(), name='ajax_get_invition_all'),
 ]

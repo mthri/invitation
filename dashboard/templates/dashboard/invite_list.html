@@ -31,24 +31,18 @@
                 <h3 class="title">فیلترها</h3>
             </div>
             <div class="tile-body">
-                <div class="form-row">
-                    <div class="form-group col-md-3">
-                        <label class="control-label">عنوان</label>
-                        <input class="form-control" type="text" >
+                <form id="filterForm">
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label class="control-label">تاریخ</label>
+                            <input class="form-control date" type="text">
+                            <input type="hidden" name="startDate" id="date-alt">
+                        </div>
                     </div>
-                    <div class="form-group col-md-3">
-                        <label class="control-label">تاریخ</label>
-                        <input class="form-control date" type="text">
-                        <input type="hidden" name="date" id="date-alt">
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label class="control-label">وضعیت</label>
-                        <input class="form-control" type="text" >
-                    </div>
-                </div>
+                </form>
             </div>
             <div class="tile-footer">
-                <button class="btn btn-primary" type="submit"><i
+                <button class="btn btn-primary" type="button" id="formFilterSubmit"><i
                         class="fa fa-fw fa-lg fa-search"></i>جستجو</button>&nbsp;&nbsp;&nbsp;
             </div>
         </div>
@@ -62,8 +56,8 @@
                             <th>عنوان</th>
                             <th>روز و ساعت </th>
                             <th>تعداد میهمانان</th>
-                            <th>وضعیت</th>
-                            <th>عملیات</th>
+                            <!-- <th>وضعیت</th>
+                            <th>عملیات</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -88,11 +82,40 @@
 <script type="text/javascript" src="{% static 'dashboard/js/plugins/persian-datepicker.min.js' %}"></script>
 <script>
     $(() => {
-        var tagTable = $('#invite-table').DataTable({
+        var inviteTable = $('#invite-table').DataTable({
             paging: true,
             pageLength: 50,
-            searching: false,
+            searching: true,
             fixedColumns: true,
+            serverSide: true,
+            ajax:{
+                url: "{% url 'ajax_get_invition_all' %}",
+                data: (data) => {
+                    let formData = $('#filterForm').serialize()
+                    data = new URLSearchParams({
+                        start: data.start,
+                        length: data.length,
+                        search: data.search.value,
+                        csrfmiddlewaretoken: "{{ csrf_token }}"
+                    }).toString()
+                    return data + '&' + formData
+                },
+                type: 'POST'
+            },
+            columns: [
+                {
+                    data: 'title'
+                },
+                {
+                    data: 'sendAt',
+                    render: (date) => {
+                        return new Date(date).toLocaleDateString('fa-IR')
+                    }
+                },
+                {
+                    data: 'cardCount'
+                }
+            ],
             language: datatablePersianLang,
         })
 
@@ -101,6 +124,10 @@
             format: 'YYYY/MM/DD',
             altField: '#date-alt'
         });
+    
+        $('#formFilterSubmit').click(event => {
+            inviteTable.ajax.reload()
+        })
     })
 </script>
 {% endblock %}
