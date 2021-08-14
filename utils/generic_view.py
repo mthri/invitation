@@ -18,9 +18,9 @@ class DataTableView(View):
     http_method_names = ['post', 'options']
     max_length = 100
     queryset = None
-    result_args = None
-    result_kwargs = None
-    search_on = None
+    result_args:tuple = None
+    result_kwargs:dict = None
+    search_on:tuple = None
 
     def post(self, request, *args, **kwargs):
         count = self.queryset.count()
@@ -30,9 +30,13 @@ class DataTableView(View):
         length = int(request.POST.get('length', 0))
         search = request.POST.get('search', None)
 
+        search_field = dict()
+
         if search and search.strip() != '':
-            #TODO add multi query support
-            search_field = {self.search_on+'__icontains': search}
+                
+            for search_key in self.search_on:
+                search_field.update({search_key+'__icontains': search})
+
             self.queryset = self.queryset.filter(**search_field)
 
         # we can't set length  greater than max_length
@@ -60,6 +64,7 @@ class Select2View(View):
 
     def get(self, request, *args, **kwargs):
         search = request.GET.get(self.search_key, '')
+        #TODO do it like datatable
         if len(self.search_on) > 1:
             _tmp = []
             for index, value in enumerate(self.search_on):
