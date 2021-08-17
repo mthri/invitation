@@ -10,15 +10,15 @@ from .models import *
 def verify(request):
     if request.GET.get('Status') == 'OK':
         authority = int(request.GET['Authority'])
-        result, status = Invoice.paid_invoice(authority=authority)
+        result, status = Invoice.paid_invoice(authority)
         
-    return redirect('purchase')
+    return redirect('transactions')
 
 @login_required
 def pay(request, authority):
     redirect_url = zarinpal.payment_url(authority)
     invoice = Invoice.get_unpaid_invoice(authority=authority)
-    if not invoice.exists():
+    if not invoice:
         raise Http404
     
     invoice.shipping_date = now()
@@ -26,4 +26,8 @@ def pay(request, authority):
     invoice.save()
 
     return redirect(redirect_url)
+
+@login_required
+def create_invoice(request):
+    pass
     

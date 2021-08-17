@@ -23,12 +23,13 @@
             <div class="tile-title-w-btn">
                 <h3 class="title">افزایش اعتبار</h3>
             </div>
-            <form method="POST">
+            <form method="POST" id="CreateInvoiceForm">
                 {% csrf_token %}
                 <div class="tile-body">
                     <div class="form-group">
                         <label class="control-label">مبلغ</label>
-                        <input class="form-control" type="text" name="amount" maxlength="20" placeholder="مبلغ مورد نظر خود را به ریال وارد کنید">
+                        <input class="form-control" type="text" name="amount" 
+                            maxlength="20" placeholder="مبلغ مورد نظر خود را به ریال وارد کنید">
                     </div>
                     <div class="form-group">
                         <label>توضیحات</label>
@@ -36,7 +37,7 @@
                     </div>
                 </div>
                 <div class="tile-footer">
-                    <button class="btn btn-primary" type="submit"><i
+                    <button class="btn btn-primary" type="button" id="submitCreateInvoice"><i
                             class="fa fa-fw fa-lg fa-check-circle"></i>ثبت</button>&nbsp;&nbsp;&nbsp;
                 </div>
             </form>
@@ -51,7 +52,33 @@
     var CSRF_TOKEN = 'csrfmiddlewaretoken={{csrf_token}}'
 </script>
 <script>
-    // var formError = {{errors|safe}}
-    // showError(formError)
+        $(() => {
+            $('#submitCreateInvoice').click(event => {
+                payload = formToObject('#CreateInvoiceForm')
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'payment:ajax_invoice_add' %}",
+                    headers: { 'X-CSRFToken': '{{csrf_token}}' },
+                    data: JSON.stringify(payload),
+                    dataType: 'json',
+                    contentType: 'application/json'
+                }).done(data => {
+                    window.location.href = data['redirect']
+                }).fail(errors => {
+                    alert('fail')
+                })
+            })
+        })
+
+        function formToObject(form){
+            let data = $(form).serializeArray()
+            let formObject = {}
+
+            for (let index = 0; index < data.length; index++) {
+                formObject[data[index].name] = data[index].value
+            }
+
+            return formObject
+        }
 </script>
 {% endblock %}

@@ -2,7 +2,7 @@ from typing import Tuple
 import uuid
 import logging
 
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
@@ -47,12 +47,13 @@ class Invoice(BasicField):
 
     @staticmethod
     def get_unpaid_invoice(authority:int = None):
-        query = Invoice.objects.all().exclude(reference_id=None)
+        query = Invoice.objects.all().exclude(reference_id__isnull=False)
         if authority != None:
             query = query.filter(authority=authority).first()
         return query
 
     @staticmethod
+    @transaction.atomic
     def paid_invoice(authority: int) -> Tuple[str, bool]:
         invoice = Invoice.get_unpaid_invoice().filter(authority=authority)
         if not invoice.exists():
@@ -80,21 +81,22 @@ class Invoice(BasicField):
             return _('خطا نامشخصی رویداده است'), False
 
     @staticmethod
-    def create_invoice(customer:User, amount:int) -> Tuple[str, bool]:
+    def create_invoice(customer:User, amount:int, description:str = _('افزایش موجودی')) -> Tuple[str, bool]:
         '''
         create new invoice and return redirect url (if no have error)
         '''
         try:
             redirect_url, authority = zarinpal.payment_request(amount=amount,
-                                                               description=_('افزایش موجودی'), 
+                                                               description=description, 
                                                                mobile=customer.phone, 
                                                                email=customer.email)
             Invoice.objects.create(
                 customer=customer,
                 amount=amount,
-                authority=authority
+                authority=authority,
+                description=description
             )
-            return reverse('payment:pay', authority), True
+            return reverse('payment:pay', args=(authority, )), True
             
         except ZarinpalError as ex:
             logging.exception(f'when create invoice for user {customer} got: ', ex)
