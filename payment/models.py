@@ -19,7 +19,7 @@ User = get_user_model()
 
 zarinpal = Zarinpal(
     merchant_id=CONFIG['ZARINPAL_MERCHANT_ID'], 
-    callback_url=reverse('payment:verify'), 
+    callback_url=CONFIG['PAYMENT_VERIFY_URL'], 
     sandbox=CONFIG['ZARINPAL_IS_SANDBOX']
 )
 
@@ -40,6 +40,7 @@ class Invoice(BasicField):
     status = EnumField(choices=StatusChoices.choices,  verbose_name=_('وضعیت'),
                        default=StatusChoices.AWAITING_PAYMENT)
     amount = models.IntegerField(verbose_name=_('مبلغ'))
+    description = models.CharField(max_length=250, null=True, blank=True, verbose_name=_('توضیحات'))
     shipping_date = models.DateTimeField(verbose_name=_('زمان ارسال به درگاه'), blank=True, null=True)
     authority = models.BigIntegerField(verbose_name=_('شناسه پرداخت'), blank=True, null=True)
     reference_id = models.IntegerField(verbose_name=_('شماره پیگیری'), blank=True, null=True)
