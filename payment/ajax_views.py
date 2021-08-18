@@ -2,7 +2,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import View
 
 from utils.generic_view import DataTableView
-from django.urls import reverse
+from django.db.models import F, Count, Value as V
 
 from dashboard.mixins import PremissionMixin, JsonValidatorMixin
 from utils.response import SuccessJsonResponse, BadJsonResponse
@@ -15,9 +15,17 @@ from payment.models import Invoice
 
 class GetInvoice(PremissionMixin, DataTableView):
     http_method_names = ['post']
+    result_args = ('id', 'status', 'amount', 
+                  'description', 'authority')
+    result_kwargs = {'shippingDate': F('shipping_date'),
+                     'referenceId': F('reference_id'),
+                     'createAt': F('created_at')}
+
+    search_on = ('description', )
 
     def post(self, request, *args, **kwargs):
-        pass
+        self.queryset = Invoice.get_by_user(request.user)
+        return super().post(request, *args, **kwargs)
 
 class CreateInvoice(PremissionMixin, JsonValidatorMixin, View):
     http_method_names = ['post']

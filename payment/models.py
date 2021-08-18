@@ -102,6 +102,7 @@ class Invoice(BasicField):
             logging.exception(f'when create invoice for user {customer} got: ', ex)
             return _('هنگام ایجاد صورت حساب خطایی رخ داده است'), False
 
-
-
+    @staticmethod
+    def get_by_user(customer:User):
+        return Invoice.objects.filter(customer=customer).exclude(is_deleted=True)
 

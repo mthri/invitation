@@ -1,3 +1,4 @@
+from payment.models import Invoice
 import uuid
 
 from django.http.request import HttpRequest
@@ -97,4 +98,5 @@ class Purchase(PremissionMixin, View):
 class Transactions(PremissionMixin, View):
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'dashboard/transactions.html')
+        return render(request, 'dashboard/transactions.html', 
+                      context={'choices': Invoice.StatusChoices.choices})
