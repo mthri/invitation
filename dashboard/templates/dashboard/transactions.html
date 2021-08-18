@@ -140,12 +140,13 @@
                     data: 'shippingDate',
                     render: (date) => {
                         if(date == null)
-                            return '-'
+                            return '<a href="#" class="sm pay-now">(هم اکنون پرداخت کنید)</a>'
                         return new Date(date).toLocaleDateString('fa-IR')
                     }
                 },
                 {
-                    data: 'authority'
+                    data: 'authority',
+                    className: "authority"
                 },
                 {
                     data: 'referenceId'
@@ -170,6 +171,11 @@
 
         $('#formFilterSubmit').click(event => {
             transactionsTable.ajax.reload()
+        })
+
+        $('#transactions-table').on('click', 'a.pay-now', (e) => {
+            let authority = $(e.target).parent().parent().find('.authority').html()
+            window.location.href = "{% url 'payment:pay' '0' %}" + authority
         })
 
     })
