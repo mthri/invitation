@@ -82,6 +82,7 @@ class Contact(BasicField):
         
         return contact
 
+
 class Tag(BasicField):
     class Meta:
         verbose_name = _('برچسب')
@@ -106,6 +107,7 @@ class Tag(BasicField):
         user_tag = set(Tag.get_by_user(user).values_list('id', flat=True))
         user_tag = user_tag.intersection(tags)
         return user_tag
+
 
 class Template(BasicField):
     class Meta:
@@ -141,6 +143,7 @@ class Invitation(BasicField):
     send_at = models.DateTimeField(null=True, blank=True, verbose_name=_('ارسال در تاریخ'))
     informations = models.JSONField(validators=[validate_draft7], verbose_name=_('اطلاعات اضافی'))
     template = models.ForeignKey(Template, verbose_name=_('قالب'), on_delete=models.SET_NULL, null=True)
+    is_sent = models.BooleanField(default=False, editable=True, verbose_name=_('ارسال شده'))
 
     def __str__(self) -> None:
         return str(self.owner) + ' | ' + self.title
@@ -191,6 +194,7 @@ class Invitation(BasicField):
     @staticmethod
     def get_by_user(user):
         return Invitation.objects.filter(owner=user).exclude(is_deleted=True)
+
 
 class InvitationCard(BasicField):
 
