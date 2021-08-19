@@ -62,15 +62,21 @@ class Invoice(BasicField):
         invoice = invoice.select_for_update()
         invoice = invoice.first()
 
+        toman_amount = invoice.amount / 10
+
         try:
-            code, message, ref_id = zarinpal.payment_verification(amount=invoice.amount, 
+            code, message, ref_id = zarinpal.payment_verification(amount=toman_amount, 
                                                                   authority=authority)
         except ZarinpalError as ex:
+            invoice.status = Invoice.StatusChoices.CANCELLED
+            invoice.save()
             return _('خطا هنگام پرداخت'), False
 
         if code == 100:
             invoice.reference_id = ref_id
             invoice.status = Invoice.StatusChoices.PAID
+            invoice.customer.cash += invoice.amount
+            invoice.customer.save()
             invoice.save()
             return _('صورت حساب باموفقیت پرداخت شد'), True
 
@@ -85,8 +91,10 @@ class Invoice(BasicField):
         '''
         create new invoice and return redirect url (if no have error)
         '''
+        #convert rial to toman
+        toman_amount = amount / 10
         try:
-            redirect_url, authority = zarinpal.payment_request(amount=amount,
+            redirect_url, authority = zarinpal.payment_request(amount=toman_amount,
                                                                description=description, 
                                                                mobile=customer.phone, 
                                                                email=customer.email)

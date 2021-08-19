@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import View
 
@@ -30,7 +31,7 @@ class GetInvoice(PremissionMixin, DataTableView):
         self.queryset = Invoice.get_by_user(request.user)
 
         if start_date and start_date.strip():
-            start_date = format_date(start_date)
+            start_date = format_date(start_date) + timedelta(days=-1)
             self.queryset = self.queryset.filter(created_at__gte=start_date)
         if end_date and end_date.strip():
             end_date = format_date(end_date)
@@ -43,7 +44,7 @@ class CreateInvoice(PremissionMixin, JsonValidatorMixin, View):
     json_body_schema = create_payment
 
     def post(self, request, *args, **kwargs):
-        amount:int = self.json_body['amount']
+        amount:int = int(self.json_body['amount'])
         description:str = self.json_body['description']
         customer = request.user
 
