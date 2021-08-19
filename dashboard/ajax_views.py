@@ -148,11 +148,11 @@ class CreateInviteCard(PremissionMixin, JsonValidatorMixin, View):
         
         if self.json_body['tagBase']:
             Invitation.create_invitation(request.user, template, 
-                                         self.json_body['templateInfoPanel'], self.json_body['isScheduler'], 
+                                         self.json_body['templateInfoPanel'], self.json_body['isScheduler'], send_sms=self.json_body['sendSMS'],
                                          tags=self.json_body['contactOrTag'], send_at=self.json_body['sendDateTime'])
         else:
             Invitation.create_invitation(request.user, template, 
-                                         self.json_body['templateInfoPanel'], self.json_body['isScheduler'], 
+                                         self.json_body['templateInfoPanel'], self.json_body['isScheduler'], send_sms=self.json_body['sendSMS'],
                                          contacts=self.json_body['contactOrTag'], send_at=self.json_body['sendDateTime'])
 
         return SuccessJsonResponse()

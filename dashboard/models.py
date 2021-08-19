@@ -8,7 +8,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
 
-from django_mysql.models import Model
+from django_mysql.models import Model, base
 from django_mysql.models import SetCharField
 from jsonschema import Draft7Validator
 from jsonschema.exceptions import ValidationError as JsonValidationError
@@ -142,9 +142,10 @@ class Invitation(BasicField):
     owner = models.ForeignKey(User, verbose_name=_('ایجاد کننده'), on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150, verbose_name=_('عنوان'), default=_('ندارد'))
     send_at = models.DateTimeField(null=True, blank=True, verbose_name=_('ارسال در تاریخ'))
-    informations = models.JSONField(validators=[validate_draft7], verbose_name=_('اطلاعات اضافی'))
+    informations = models.JSONField(validators=[validate_draft7], verbose_name=_('اطلاعات قالب'))
     template = models.ForeignKey(Template, verbose_name=_('قالب'), on_delete=models.SET_NULL, null=True)
     is_sent = models.BooleanField(default=False, editable=True, verbose_name=_('ارسال شده'))
+    extra_data = models.JSONField(null=True, verbose_name=_('اطلاعات اضافی'))
 
     def __str__(self) -> None:
         return str(self.owner) + ' | ' + self.title
@@ -169,9 +170,22 @@ class Invitation(BasicField):
 
     @staticmethod
     def create_invitation(user:User, template:Template, information:dict, is_schedule:bool, contacts:List = None, 
-                          tags:List = None, send_at:datetime = None):
+                          tags:List = None, send_at:datetime = None, send_sms:bool = False):
+
+        title = information['title']
+        del information['title']
+
+        extra_data = {
+            'send_sms': send_sms
+        }
         
-        invitation = Invitation(owner=user, template=template, informations=information)
+        invitation = Invitation(
+            owner=user, 
+            template=template, 
+            title=title,
+            informations=information,
+            extra_data=extra_data,
+        )
 
         if is_schedule and send_at:
             invitation.send_at = send_at
