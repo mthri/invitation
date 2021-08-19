@@ -25,6 +25,7 @@ class User(AbstractUser):
     phone = models.CharField(max_length=11, validators=[validate_mobile], unique=True, verbose_name=_('تلفن همراه'))
     gender = EnumField(choices=GenderChoices.choices,  verbose_name=_('جنسیت'), null=True, blank=True, 
                        default=GenderChoices.OTHER)
+    cash = models.IntegerField(null=False, blank=False, editable=True, verbose_name=_('موجودی'), default=0)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'last_name']

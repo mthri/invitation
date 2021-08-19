@@ -121,8 +121,10 @@
   <aside class="app-sidebar">
     <!-- <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg" alt="User Image"> -->
     <div>
-      <p class="app-sidebar__user-name text-center mb-5">{{user.first_name}} {{user.last_name}}</p>
-      <p class="app-sidebar__user-designation">{% block client_designation %}{% endblock %}</p>
+      <p class="app-sidebar__user-name text-center mb-5">{{user.first_name}} {{user.last_name}}
+        <br>
+        <small>موجودی: {{user.cash}} ریال</small>
+      </p>
     </div>
     </div>
     <ul class="app-menu">
