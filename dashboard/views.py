@@ -15,10 +15,11 @@ from utils.upload import save_uploaded_file
 from utils.config import CSV_DIRECTORY_PATH, CONFIG
 from utils.email import render_to_string
 
+
 @login_required
 def index(request):
     return render(request, 'dashboard/base.html')
-    
+
 
 def show_invite_card(request, card_id):
     invite_card = InvitationCard.objects.select_related('contact', 'invitation__template')\
@@ -28,12 +29,12 @@ def show_invite_card(request, card_id):
         raise Http404
     else:
         invite_card = invite_card.first()
-    
+
     template_file = open(invite_card.invitation.template.path.path, 'r').read()
 
     context = {
-        **invite_card.invitation.informations, 
-        'first_name':invite_card.contact.first_name, 
+        **invite_card.invitation.informations,
+        'first_name': invite_card.contact.first_name,
         'last_name': invite_card.contact.last_name
     }
     content = render_to_string(template_file, context=context)
@@ -43,15 +44,15 @@ def show_invite_card(request, card_id):
 class Profile(PremissionMixin, View):
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'dashboard/profile.html', 
+        return render(request, 'dashboard/profile.html',
                       context={'user': request.user})
-    
+
     def post(self, request, *args, **kwargs):
         form = UserForm(request.POST, instance=self.request.user)
         if form.is_valid():
             form.save()
 
-        return render(request, 'dashboard/profile.html', 
+        return render(request, 'dashboard/profile.html',
                       context={'user': request.user,
                                'errors': form.errors.get_json_data()})
 
@@ -61,8 +62,9 @@ class Contact(PremissionMixin, View):
     def get(self, request, *arg, **kwargs):
         return render(request, 'dashboard/contact_manage.html', context={'csv_sample': 'upload/upload/csv/sample.csv'})
 
-    def post(self, request:HttpRequest, *args, **kwargs):
-        path = CONFIG['FILE_UPLOAD_TEMP_DIR'] + '/' + CSV_DIRECTORY_PATH + str(uuid.uuid4())
+    def post(self, request: HttpRequest, *args, **kwargs):
+        path = CONFIG['FILE_UPLOAD_TEMP_DIR'] + '/' + \
+            CSV_DIRECTORY_PATH + str(uuid.uuid4())
         save_uploaded_file(path=path, file=request.FILES['file'])
 
         tags = [int(tag) for tag in request.POST.getlist('tags')]
@@ -86,23 +88,24 @@ class Contact(PremissionMixin, View):
                     owner=request.user,
                     communicative_road={'email': email}
                 ))
-        
+
         ContactModel.objects.bulk_create(contact_list)
 
         return render(request, 'dashboard/contact_manage.html')
 
 
 class Setting(PremissionMixin, View):
-    
+
     def get(self, request, *arg, **kwargs):
         return render(request, 'dashboard/setting.html')
 
 
 class Invite(PremissionMixin, View):
-    
+
     def get(self, request, *args, **kwargs):
         content = {
-            'tempaltes': Template.objects.all()
+            'tempaltes': Template.objects.all(),
+            'SMS_COST': CONFIG['SMS_COST']
         }
         return render(request, 'dashboard/invite.html', context=content)
 
@@ -122,5 +125,5 @@ class Purchase(PremissionMixin, View):
 class Transactions(PremissionMixin, View):
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'dashboard/transactions.html', 
+        return render(request, 'dashboard/transactions.html',
                       context={'choices': Invoice.StatusChoices.choices})

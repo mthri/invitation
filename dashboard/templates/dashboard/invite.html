@@ -69,6 +69,10 @@
             <div class="tile-body">
             <form>
                 <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="title">عنوان دعوت نامه</label>
+                        <input class="form-control" name="title" type="text">
+                    </div>
                 {% for field in template.schema.fields %}
                     {% if field.field_type == 'str' %}
                         <div class="form-group col-md-4">
@@ -130,6 +134,13 @@
                     </label>
                     <input class="form-control scheduler-send-date col-md-4" style="display: none;">
                 </div>
+                <div class="animated-checkbox">
+                    <label>
+                      <input type="checkbox" id="sendSMS"><span class="label-text">بصورت پیامک هم اطلاع رسانی شود</span>
+                      <br>
+                      <small>(هزینه ارسال هر پیامک {{SMS_COST}} ریال می‌باید و بصورت خودکار از حساب شما کثر میگردد)</small>
+                    </label>
+                  </div>
             </div>
         </div>
     </div>
@@ -187,7 +198,8 @@
         $('.invite-date').persianDatepicker({
             observer: true,
             format: 'YYYY/MM/DD',
-            altField: '#invite-date-alt'
+            altField: '#invite-date-alt',
+            altFormat: 'L',
         });
 
         $('.scheduler-send-date').persianDatepicker({
@@ -232,6 +244,7 @@
                 contactOrTag: $('#select-tag-user').val(),
                 isScheduler: $('.scheduler-send').is(":checked"),
                 sendDateTime: $('#scheduler-send-date-alt').val(),
+                sendSMS: $('#sendSMS').is(":checked"),
             }
             $.ajax({
                 type: 'POST',
