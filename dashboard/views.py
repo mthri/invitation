@@ -1,8 +1,10 @@
+from django.http.response import Http404, HttpResponse
+from dashboard import send_invition
 from payment.models import Invoice
 import uuid
 
 from django.http.request import HttpRequest
-from dashboard.models import Template, Tag, Contact as ContactModel
+from dashboard.models import InvitationCard, Template, Tag, Contact as ContactModel
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View
@@ -11,11 +13,33 @@ from .mixins import PremissionMixin
 from .forms import UserForm
 from utils.upload import save_uploaded_file
 from utils.config import CSV_DIRECTORY_PATH, CONFIG
+from utils.email import render_to_string
 
 @login_required
 def index(request):
     return render(request, 'dashboard/base.html')
     
+
+def show_invite_card(request, card_id):
+    invite_card = InvitationCard.objects.select_related('contact', 'invitation__template')\
+                                        .filter(id=card_id)
+
+    if not invite_card.exclude():
+        raise Http404
+    else:
+        invite_card = invite_card.first()
+    
+    template_file = open(invite_card.invitation.template.path.path, 'r').read()
+
+    context = {
+        **invite_card.invitation.informations, 
+        'first_name':invite_card.contact.first_name, 
+        'last_name': invite_card.contact.last_name
+    }
+    content = render_to_string(template_file, context=context)
+    return HttpResponse(content)
+
+
 class Profile(PremissionMixin, View):
 
     def get(self, request, *args, **kwargs):

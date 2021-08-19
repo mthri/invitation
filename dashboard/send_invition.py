@@ -12,6 +12,7 @@ def send_by_invition(invition:Invitation):
 
     template_file = open(invition.template.path.path, 'r').read()
 
+    #TODO use select for update
     invition_cards = InvitationCard.objects.select_related('contact')\
                                            .filter(invitation=invition)
 

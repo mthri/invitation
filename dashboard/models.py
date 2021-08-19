@@ -6,6 +6,7 @@ from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.urls import reverse
 
 from django_mysql.models import Model
 from django_mysql.models import SetCharField
@@ -210,6 +211,9 @@ class InvitationCard(BasicField):
     contact = models.ForeignKey(Contact, verbose_name=_('مخاطب'), null=True, 
                                 blank=False, on_delete=models.DO_NOTHING)
     is_sent = models.BooleanField(default=False, editable=True, verbose_name=_('ارسال شده'))
+
+    def get_absolute_url(self):
+        return reverse('show_invite_card', args=(self.id, )) 
 
     def __str__(self) -> str:
         return f'{self.contact} | {self.invitation}  | ' + ('ارسال شده' if self.is_sent else 'ارسال نشده')
