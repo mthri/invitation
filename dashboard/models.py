@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
+from django.utils.timezone import now
 
 from django_mysql.models import Model, base
 from django_mysql.models import SetCharField
@@ -14,7 +15,7 @@ from jsonschema import Draft7Validator
 from jsonschema.exceptions import ValidationError as JsonValidationError
 
 from utils.validators import validate_mobile, validate_draft7, validate_template
-from utils.config import THUMBNAIL_DIRECTORY_PATH, TEMPLATE_DIRECTORY_PATH
+from utils.config import CONFIG, THUMBNAIL_DIRECTORY_PATH, TEMPLATE_DIRECTORY_PATH
 from utils.json_validation import generate_validator_darft7
 
 
@@ -169,6 +170,7 @@ class Invitation(BasicField):
 
 
     @staticmethod
+    @transaction.atomic
     def create_invitation(user:User, template:Template, information:dict, is_schedule:bool, contacts:List = None, 
                           tags:List = None, send_at:datetime = None, send_sms:bool = False):
 
@@ -189,6 +191,8 @@ class Invitation(BasicField):
 
         if is_schedule and send_at:
             invitation.send_at = send_at
+        else:
+            invitation.send_at = now()
         
         if not invitation.is_information_valid:
             raise ValueError('schema error')
@@ -204,6 +208,15 @@ class Invitation(BasicField):
             user_contact = Contact.get_by_user(user)
             contact_list += list(user_contact.filter(tags__in=tags))
         
+        if send_sms:
+            #calcualte cost
+            sms_cost = CONFIG['SMS_COST'] * len(contact_list)
+            if user.cash >= sms_cost:
+                user.cash -= sms_cost
+                user.save()
+            else:
+                raise Exception('more than cash')
+
         InvitationCard.create_invitation_card(invitation, contact_list)
 
     @staticmethod

@@ -254,9 +254,24 @@
                 dataType: 'json',
                 contentType: 'application/json'
             }).done(data => {
-                alert('success')
+                swal({
+                    title: "",
+                    text: "عملیات با موفقیت انجام شد",
+                    type: "success",
+                    showCancelButton: false,
+                    confirmButtonText: "ادامه",
+                })
+                setTimeout(() => { window.location.href = "{% url 'invite_history' %}" }, 2000);
+                
             }).fail(errors => {
-                alert('fail')
+                swal({
+                    title: "",
+                    text: "خطا غیر منتظره ای رخ داده است",
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: "ادامه",
+                    closeOnConfirm: true,
+                })
             })
         })
         
